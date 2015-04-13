@@ -72,12 +72,13 @@ EOT
                     'type' => 'double'
                 ),
                 'eventDate' => array(
-                    'type' => 'date'
+                    'type' => 'date',
+                    "format" => "yyyy-MM-dd HH:mm:ss"
                 ),
                 'identifiedBy' => array(
                     'type' => 'string',
-                    'analyzer' => 'standard'
-                ),
+                    'index' => 'not_analyzed'
+                )
             )
         );
 

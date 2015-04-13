@@ -9,11 +9,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Exception;
+use Elasticsearch;
 
 class Process extends Command {
 
     var $selectedFields = Array();
     var $catalogNumberFieldNumber = FALSE;
+    var $client = FALSE;
 
     protected function configure()
     {   
@@ -65,13 +67,15 @@ EOT
 
         $this->selectFields($handle);
 
+        $this->client = new Elasticsearch\Client();
+
         $i = 0;
         while ($i < $rows)
         {
             $DwCrow = fgets($handle);
-            $data = $this->handleRow($DwCrow);
+            $response = $this->handleRow($DwCrow);
 
-            $output->writeln('<header>' . $data . '</header>');
+//            $output->writeln('<header>' . $response . '</header>');
             $i++;
         }
             
@@ -83,7 +87,7 @@ EOT
 
     protected function handleRow($DwCrow)
     {
-        $html = "<pre>";
+        $html = "";
         $data = Array();
         $params = Array();
         $params['index'] = 'gbif';
@@ -96,11 +100,22 @@ EOT
         foreach ($this->selectedFields as $fieldNumber => $fieldName)
         {
 //            $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
+            
             $data[$fieldName] = $DwCrowArray[$fieldNumber];
+
+            // Duplicate data fields
+            if ("scientificName" == $fieldName)
+            {
+                $data["scientificName_exact"] = $DwCrowArray[$fieldNumber];
+            }
 //            print_r ($rowArray);
         }
         $params['body']  = $data;
-        $html = json_encode($params);
+
+        $ret = $this->client->index($params);
+
+//        print_r($params);
+//        print_r($ret);
 
         return $html . "\n------------------------------------\n";
     }
