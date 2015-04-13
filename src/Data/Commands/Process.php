@@ -80,6 +80,18 @@ EOT
         $output->writeln('<header>Total rows = '.$i.' </header>');
     }
 
+    protected function handleRow($line)
+    {
+        $html = "FOO";
+        $rowArray = explode("\t", $line);
+        foreach ($rowArray as $key => $value)
+        {
+            $html .= $value . ", ";
+//            print_r ($rowArray);
+        }
+//        return $html;
+    }
+
     protected function selectFields($handle)
     {
         include_once "settings.php";
@@ -97,18 +109,6 @@ EOT
         }
 
         print_r ($this->selected);
-    }
-
-    protected function handleRow($line)
-    {
-        $html = "FOO";
-        $rowArray = explode("\t", $line);
-        foreach ($rowArray as $key => $value)
-        {
-            $html .= $value . ", ";
-//            print_r ($rowArray);
-        }
-//        return $html;
     }
 
 }
