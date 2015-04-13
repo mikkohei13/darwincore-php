@@ -50,12 +50,22 @@ EOT
         // Process
         $output->writeln('<header>Processing data from ' . $fileName . '</header>');
 
+        $handle = fopen($fileName, 'r');
+
+        if (! $handle)
+        {
+            throw new Exception('Could not open file.');
+        }
+
         $i = 0;
         while ($i < $rows)
         {
-            $output->writeln('<header>'.$i.'</header>');
+            $line = fgets($handle);
+            $output->writeln('<header>'.$line.'</header>');
             $i++;
         }
+            
+        fclose($handle);
 
         // Summary
         $output->writeln('<header>Total rows = '.$i.' </header>');
