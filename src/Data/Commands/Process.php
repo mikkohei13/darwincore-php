@@ -86,11 +86,11 @@ EOT
         $html = "<pre>";
         $data = Array();
         $params = Array();
-        $params['index'] = 'my_index';
-        $params['type']  = 'my_type';
+        $params['index'] = 'gbif';
+        $params['type']  = 'occurrence';
 
         $DwCrowArray = explode("\t", $DwCrow);
-        
+
         $params['id'] = $DwCrowArray[$this->catalogNumberFieldNumber];
 
         foreach ($this->selectedFields as $fieldNumber => $fieldName)

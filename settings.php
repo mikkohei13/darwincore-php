@@ -1,7 +1,6 @@
 <?php
 
 // DwC fields to process
-
 $settingsSelectedFields['catalogNumber'] = TRUE;
 $settingsSelectedFields['county'] = TRUE;
 $settingsSelectedFields['decimalLatitude'] = TRUE;
