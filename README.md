@@ -18,12 +18,14 @@ Commands:
 TODO
 ----
 
-Handle missing dates; show only amount while indexing and at the end
-Code cleanup
-(Progress indicator)
-Speed
-Specify from which line to start indexing from
-Handle missing coordinates
+- Handle missing dates; show only amount while indexing and at the end
+- Code cleanup
+- (Progress indicator)
+- Speed
+- Specify from which line to start indexing from; http://stackoverflow.com/questions/514673/how-do-i-open-a-file-from-line-x-to-line-y-in-php - make sure correct amount of rows are skipped
+- Handle missing coordinates
+- rows = end
+- skip = start
 
 CLIPS
 -----

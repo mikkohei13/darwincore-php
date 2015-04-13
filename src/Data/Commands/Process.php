@@ -20,12 +20,14 @@ class Process extends Command {
     protected function configure()
     {   
         $rows = 10;
+        $skip = 0;
         $fileName = "demo.txt";
 
         $this->setName("data:process")
              ->setDescription("Process data from a file specified")
              ->setDefinition(array(
                       new InputOption('rows', 'r', InputOption::VALUE_OPTIONAL, 'Number of rows to handle', $rows),
+                      new InputOption('skip', 's', InputOption::VALUE_OPTIONAL, 'Number of rows to skip', $skip),
                       new InputOption('file', 'f', InputOption::VALUE_OPTIONAL, 'Name of datafile', $fileName)
                 ))
              ->setHelp(<<<EOT
@@ -46,6 +48,7 @@ EOT
 
         // Options
         $rows = intval($input->getOption('rows'));
+        $skip = intval($input->getOption('skip'));
         $fileName  = $input->getOption('file');
 
         if ($rows < 0)
@@ -54,7 +57,7 @@ EOT
         }
 
         // Process
-        $output->writeln('<header>Processing data from ' . $fileName . '</header>');
+        $output->writeln('<header>Processing data from ' . $fileName . ', skipping ' . $skip . ' rows</header>');
 
 //        $output->writeln('<header>' . getcwd() . '</header>');
 
@@ -70,17 +73,29 @@ EOT
         $this->client = new Elasticsearch\Client();
 
         $i = 0;
+        $skippingDone = FALSE;
+
         while ($i < $rows)
         {
+            $i++;
             $DwCrow = fgets($handle);
+            if ($i < $skip)
+            {
+                continue;
+            }
+            if (! $skippingDone)
+            {
+                $output->writeln('<header>skipped ' . $skip . ' rows</header>');
+                $skippingDone = TRUE;
+            }
+
             $this->handleRow($DwCrow);
 
 //            $output->writeln('<header>' . $response . '</header>');
             if ($i % 10000 == 0)
             {
-                $output->writeln('<header>' . ( round(($i / $rows * 100), 1) ) . '% done (' . ( $i / 1000 ) . 'k)</header>');
+                $output->writeln('<header>' . ( round((($i - $skip) / ($rows - $skip) * 100), 1) ) . '% done (' . ( $i / 1000 ) . 'k)</header>');
             }
-            $i++;
         }
             
         fclose($handle);
