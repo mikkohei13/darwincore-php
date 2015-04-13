@@ -8,6 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Exception;
 
 class Process extends Command {
 
@@ -54,7 +55,7 @@ EOT
 
         if (! $handle)
         {
-            throw new Exception('Could not open file.');
+            throw new Exception('Could not open file ' . $fileName);
         }
 
         $i = 0;
