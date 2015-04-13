@@ -73,9 +73,13 @@ EOT
         while ($i < $rows)
         {
             $DwCrow = fgets($handle);
-            $response = $this->handleRow($DwCrow);
+            $this->handleRow($DwCrow);
 
 //            $output->writeln('<header>' . $response . '</header>');
+            if ($i % 10000 == 0)
+            {
+                $output->writeln('<header>' . ( round(($i / $rows * 100), 1) ) . '% done (' . ( $i / 1000 ) . 'k)</header>');
+            }
             $i++;
         }
             
@@ -87,9 +91,10 @@ EOT
 
     protected function handleRow($DwCrow)
     {
-        $html = "";
         $data = Array();
         $params = Array();
+        $missingDates = 0;
+
         $params['index'] = 'gbif';
         $params['type']  = 'occurrence';
 
@@ -100,8 +105,16 @@ EOT
         foreach ($this->selectedFields as $fieldNumber => $fieldName)
         {
 //            $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
-            
-            $data[$fieldName] = $DwCrowArray[$fieldNumber];
+
+            if ("eventDate" == $fieldName && empty($DwCrowArray[$fieldNumber]))
+            {
+//                echo "\nempty eventDate on row " . $params['id'];
+                $data[$fieldName] = null;
+            }
+            else
+            {
+                $data[$fieldName] = $DwCrowArray[$fieldNumber];
+            }
 
             // Duplicate data fields
             if ("scientificName" == $fieldName)
@@ -116,8 +129,6 @@ EOT
 
 //        print_r($params);
 //        print_r($ret);
-
-        return $html . "\n------------------------------------\n";
     }
 
     protected function selectFields($handle)
