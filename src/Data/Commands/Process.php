@@ -12,7 +12,7 @@ use Exception;
 
 class Process extends Command {
 
-    var $selected = Array();
+    var $selectedFields = Array();
 
     protected function configure()
     {   
@@ -67,8 +67,8 @@ EOT
         $i = 0;
         while ($i < $rows)
         {
-            $line = fgets($handle);
-            $data = $this->handleRow($line);
+            $row = fgets($handle);
+            $data = $this->handleRow($row);
 
             $output->writeln('<header>' . $data . '</header>');
             $i++;
@@ -80,11 +80,11 @@ EOT
         $output->writeln('<header>Total rows = '.$i.' </header>');
     }
 
-    protected function handleRow($line)
+    protected function handleRow($row)
     {
         $html = "";
-        $rowArray = explode("\t", $line);
-        foreach ($this->selected as $fieldNumber => $fieldName)
+        $rowArray = explode("\t", $row);
+        foreach ($this->selectedFields as $fieldNumber => $fieldName)
         {
             $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
 //            print_r ($rowArray);
@@ -96,19 +96,19 @@ EOT
     {
         include_once "settings.php";
 
-        $fileFields = fgets($handle);
-        $fileFieldsArray = explode("\t", $fileFields);
+        $fileFieldsRow = fgets($handle);
+        $fileFieldsArray = explode("\t", $fileFieldsRow);
 //        print_r ($fileFieldsArray);
 
-        foreach ($fileFieldsArray as $number => $field)
+        foreach ($fileFieldsArray as $fieldNumber => $fieldName)
         {
-            if (@$selectedFields[$field] == TRUE)
+            if (@$settingsSelectedFields[$fieldName] == TRUE)
             {
-                $this->selected[$number] = $field;
+                $this->selectedFields[$fieldNumber] = $fieldName;
             }
         }
 
-        print_r ($this->selected);
+        print_r ($this->selectedFields);
     }
 
 }

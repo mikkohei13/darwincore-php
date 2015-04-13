@@ -2,11 +2,11 @@
 
 // DwC fields to process
 
-$selectedFields['catalogNumber'] = TRUE;
-$selectedFields['county'] = TRUE;
-$selectedFields['decimalLatitude'] = TRUE;
-$selectedFields['decimalLongitude'] = TRUE;
-$selectedFields['eventDate'] = TRUE;
-$selectedFields['identifiedBy'] = TRUE;
-$selectedFields['locality'] = TRUE;
-$selectedFields['scientificName'] = TRUE;
+$settingsSelectedFields['catalogNumber'] = TRUE;
+$settingsSelectedFields['county'] = TRUE;
+$settingsSelectedFields['decimalLatitude'] = TRUE;
+$settingsSelectedFields['decimalLongitude'] = TRUE;
+$settingsSelectedFields['eventDate'] = TRUE;
+$settingsSelectedFields['identifiedBy'] = TRUE;
+$settingsSelectedFields['locality'] = TRUE;
+$settingsSelectedFields['scientificName'] = TRUE;
