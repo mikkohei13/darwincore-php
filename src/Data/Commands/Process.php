@@ -12,6 +12,8 @@ use Exception;
 
 class Process extends Command {
 
+    var $selected = Array();
+
     protected function configure()
     {   
         $rows = 10;
@@ -51,6 +53,8 @@ EOT
         // Process
         $output->writeln('<header>Processing data from ' . $fileName . '</header>');
 
+//        $output->writeln('<header>' . getcwd() . '</header>');
+
         $handle = fopen($fileName, 'r');
 
         if (! $handle)
@@ -58,11 +62,15 @@ EOT
             throw new Exception('Could not open file ' . $fileName);
         }
 
+        $this->selectFields($handle);
+
         $i = 0;
         while ($i < $rows)
         {
             $line = fgets($handle);
-            $output->writeln('<header>'.$line.'</header>');
+            $data = $this->handleRow($line);
+
+            $output->writeln('<header>' . $data . '</header>');
             $i++;
         }
             
@@ -71,4 +79,36 @@ EOT
         // Summary
         $output->writeln('<header>Total rows = '.$i.' </header>');
     }
+
+    protected function selectFields($handle)
+    {
+        include_once "settings.php";
+
+        $fileFields = fgets($handle);
+        $fileFieldsArray = explode("\t", $fileFields);
+//        print_r ($fileFieldsArray);
+
+        foreach ($fileFieldsArray as $number => $field)
+        {
+            if (@$selectedFields[$field] == TRUE)
+            {
+                $this->selected[$number] = $field;
+            }
+        }
+
+        print_r ($this->selected);
+    }
+
+    protected function handleRow($line)
+    {
+        $html = "FOO";
+        $rowArray = explode("\t", $line);
+        foreach ($rowArray as $key => $value)
+        {
+            $html .= $value . ", ";
+//            print_r ($rowArray);
+        }
+//        return $html;
+    }
+
 }
