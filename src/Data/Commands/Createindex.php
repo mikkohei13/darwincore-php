@@ -33,22 +33,51 @@ EOT
         $output->getFormatter()->setStyle('header', $header_style);
 
         // Example Index Mapping
-        $myTypeMapping = array(
+        $typeMapping = array(
             '_source' => array(
                 'enabled' => true
             ),
             'properties' => array(
-                'first_name' => array(
+                'catalogNumber' => array(
+                    'type' => 'integer'
+                ),
+                'scientificName' => array(
                     'type' => 'string',
                     'analyzer' => 'standard'
                 ),
-                'age' => array(
-                    'type' => 'integer'
-                )
+                'scientificName_exact' => array(
+                    'type' => 'string',
+                    'analyzer' => 'not_analyzed'
+                ),
+                'county' => array(
+                    'type' => 'string',
+                    'analyzer' => 'standard'
+                ),
+                'locality' => array(
+                    'type' => 'string',
+                    'analyzer' => 'standard'
+                ),
+                'locality_exact' => array(
+                    'type' => 'string',
+                    'analyzer' => 'not_analyzed'
+                ),
+                'decimalLatitude' => array(
+                    'type' => 'double'
+                ),
+                'decimalLongitude' => array(
+                    'type' => 'double'
+                ),
+                'eventDate' => array(
+                    'type' => 'date'
+                ),
+                'identifiedBy' => array(
+                    'type' => 'string',
+                    'analyzer' => 'standard'
+                ),
             )
         );
 
-        print_r($myTypeMapping);
+        print_r($typeMapping);
 
         // Summary
         $output->writeln('<header>End</header>');
