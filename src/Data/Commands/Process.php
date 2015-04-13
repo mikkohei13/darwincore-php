@@ -82,14 +82,14 @@ EOT
 
     protected function handleRow($line)
     {
-        $html = "FOO";
+        $html = "";
         $rowArray = explode("\t", $line);
-        foreach ($rowArray as $key => $value)
+        foreach ($this->selected as $fieldNumber => $fieldName)
         {
-            $html .= $value . ", ";
+            $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
 //            print_r ($rowArray);
         }
-//        return $html;
+        return $html . "------------------------------------";
     }
 
     protected function selectFields($handle)
