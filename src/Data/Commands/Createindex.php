@@ -9,6 +9,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Exception;
+use Elasticsearch;
+
 
 class Createindex extends Command {
 
@@ -32,6 +34,8 @@ EOT
         $header_style = new OutputFormatterStyle('white', 'green', array('bold'));
         $output->getFormatter()->setStyle('header', $header_style);
 
+        $client = new Elasticsearch\Client();
+
         // Example Index Mapping
         $typeMapping = array(
             '_source' => array(
@@ -47,7 +51,7 @@ EOT
                 ),
                 'scientificName_exact' => array(
                     'type' => 'string',
-                    'analyzer' => 'not_analyzed'
+                    'index' => 'not_analyzed'
                 ),
                 'county' => array(
                     'type' => 'string',
@@ -59,7 +63,7 @@ EOT
                 ),
                 'locality_exact' => array(
                     'type' => 'string',
-                    'analyzer' => 'not_analyzed'
+                    'index' => 'not_analyzed'
                 ),
                 'decimalLatitude' => array(
                     'type' => 'double'
@@ -79,8 +83,13 @@ EOT
 
         print_r($typeMapping);
 
+        $indexParams['index']  = 'gbif';
+        $indexParams['body']['mappings']['occurrence'] = $typeMapping;
+
+        $client->indices()->create($indexParams);
+
         // Summary
-        $output->writeln('<header>End</header>');
+        $output->writeln('<header>Index created</header>');
     }
 
 }
