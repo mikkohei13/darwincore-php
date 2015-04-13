@@ -13,6 +13,7 @@ use Exception;
 class Process extends Command {
 
     var $selectedFields = Array();
+    var $catalogNumberFieldNumber = FALSE;
 
     protected function configure()
     {   
@@ -67,8 +68,8 @@ EOT
         $i = 0;
         while ($i < $rows)
         {
-            $row = fgets($handle);
-            $data = $this->handleRow($row);
+            $DwCrow = fgets($handle);
+            $data = $this->handleRow($DwCrow);
 
             $output->writeln('<header>' . $data . '</header>');
             $i++;
@@ -80,16 +81,28 @@ EOT
         $output->writeln('<header>Total rows = '.$i.' </header>');
     }
 
-    protected function handleRow($row)
+    protected function handleRow($DwCrow)
     {
-        $html = "";
-        $rowArray = explode("\t", $row);
+        $html = "<pre>";
+        $data = Array();
+        $params = Array();
+        $params['index'] = 'my_index';
+        $params['type']  = 'my_type';
+
+        $DwCrowArray = explode("\t", $DwCrow);
+        
+        $params['id'] = $DwCrowArray[$this->catalogNumberFieldNumber];
+
         foreach ($this->selectedFields as $fieldNumber => $fieldName)
         {
-            $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
+//            $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
+            $data[$fieldName] = $DwCrowArray[$fieldNumber];
 //            print_r ($rowArray);
         }
-        return $html . "------------------------------------";
+        $params['body']  = $data;
+        $html = json_encode($params);
+
+        return $html . "\n------------------------------------\n";
     }
 
     protected function selectFields($handle)
@@ -105,6 +118,10 @@ EOT
             if (@$settingsSelectedFields[$fieldName] == TRUE)
             {
                 $this->selectedFields[$fieldNumber] = $fieldName;
+                if ("catalogNumberField" == $fieldName)
+                {
+                    $this->catalogNumberFieldNumber = $fieldNumber;
+                }
             }
         }
 

@@ -1,6 +1,10 @@
 
 PHP command line tools for reading large DwC datasets
 
+Installation
+------------
+
+	composer install --no-dev
 
 Usage
 -----
