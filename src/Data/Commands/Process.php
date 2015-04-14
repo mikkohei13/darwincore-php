@@ -119,24 +119,26 @@ EOT
 
         $params['id'] = $DwCrowArray[$this->catalogNumberFieldNumber];
 
+        // Goes through each selected field
         foreach ($this->selectedFields as $fieldNumber => $fieldName)
         {
+            $fieldValue = $DwCrowArray[$fieldNumber];
 //            $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
 
-            if ("eventDate" == $fieldName && empty($DwCrowArray[$fieldNumber]))
+            if ("eventDate" == $fieldName && empty($fieldValue))
             {
 //                echo "\nempty eventDate on row " . $params['id'];
                 $data[$fieldName] = null;
             }
             else
             {
-                $data[$fieldName] = $DwCrowArray[$fieldNumber];
+                $data[$fieldName] = $fieldValue;
             }
 
             // Duplicate data fields
             if ("scientificName" == $fieldName)
             {
-                $data["scientificName_exact"] = $DwCrowArray[$fieldNumber];
+                $data["scientificName_exact"] = $fieldValue;
             }
 //            print_r ($rowArray);
         }
