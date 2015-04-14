@@ -71,10 +71,25 @@ EOT
                 'decimalLongitude' => array(
                     'type' => 'double'
                 ),
+                'coordinates' => array(
+                    "type": 'geo_point'
+                ),
                 'eventDate' => array(
                     'type' => 'date',
                     "format" => "yyyy-MM-dd HH:mm:ss"
                 ),
+                'eventDateYear' => array(
+                    'type' => 'short'
+                ),
+                'eventDateMonth' => array(
+                    'type' => 'short'
+                ),
+                'eventDateDay' => array(
+                    'type' => 'short'
+                ),
+                'eventDateHour' => array(
+                    'type' => 'short'
+                )
                 'identifiedBy' => array(
                     'type' => 'string',
                     'index' => 'not_analyzed'
@@ -82,10 +97,13 @@ EOT
             )
         );
 
-        print_r($typeMapping);
-
+        $indexParams['body']['settings']['number_of_shards']   = 3;
+        $indexParams['body']['settings']['number_of_replicas'] = 0;
         $indexParams['index']  = 'gbif';
+
         $indexParams['body']['mappings']['occurrence'] = $typeMapping;
+
+        print_r($indexParams); // debug
 
         $client->indices()->create($indexParams);
 

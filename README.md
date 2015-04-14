@@ -18,6 +18,7 @@ Commands:
 TODO
 ----
 
+- Batch update
 - Geoshape
 - Handle missing dates; show only amount while indexing and at the end
 - Code cleanup
@@ -27,6 +28,11 @@ TODO
 - Handle missing coordinates
 - rows = end
 - skip = start
+- remove empty fields
+- set index propersties (shards, replicas)
+- split date and time into parts
+- define analysis and mapping in settings file
+
 
 CLIPS
 -----
