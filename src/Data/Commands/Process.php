@@ -19,15 +19,15 @@ class Process extends Command {
 
     protected function configure()
     {   
-        $rows = 10;
-        $skip = 0;
+        $start = 0;
+        $end = 10;
         $fileName = "demo.txt";
 
         $this->setName("data:process")
              ->setDescription("Process data from a file specified")
              ->setDefinition(array(
-                      new InputOption('rows', 'r', InputOption::VALUE_OPTIONAL, 'Number of rows to handle', $rows),
-                      new InputOption('skip', 's', InputOption::VALUE_OPTIONAL, 'Number of rows to skip', $skip),
+                      new InputOption('start', 's', InputOption::VALUE_OPTIONAL, 'Which row to start indexing from', $start),
+                      new InputOption('end', 'e', InputOption::VALUE_OPTIONAL, 'Which row to stop indexing to', $end),
                       new InputOption('file', 'f', InputOption::VALUE_OPTIONAL, 'Name of datafile', $fileName)
                 ))
              ->setHelp(<<<EOT
@@ -35,7 +35,7 @@ Process data from a file specified
 
 Usage:
 
-<info>app/console data:process -r 10 -f data.txt</info>
+<info>app/console data:process -s 10 -e 20 -f data.txt</info>
 EOT
 );
     }
@@ -47,17 +47,19 @@ EOT
         $output->getFormatter()->setStyle('header', $header_style);
 
         // Options
-        $rows = intval($input->getOption('rows'));
-        $skip = intval($input->getOption('skip'));
+        $start = intval($input->getOption('start'));
+        $end = intval($input->getOption('end'));
+        $totalRows = $end - $start;
         $fileName  = $input->getOption('file');
 
+/*
         if ($rows < 0)
         {
            throw new \InvalidArgumentException('Row count must be higher than zero.');
         }
-
+*/
         // Process
-        $output->writeln('<header>Processing data from ' . $fileName . ', skipping ' . $skip . ' rows</header>');
+        $output->writeln('<header>Processing data from ' . $fileName . ', running to start line on row ' . $start . '</header>');
 
 //        $output->writeln('<header>' . getcwd() . '</header>');
 
@@ -75,17 +77,17 @@ EOT
         $i = 0;
         $skippingDone = FALSE;
 
-        while ($i < $rows)
+        while ($i < $end)
         {
             $i++;
             $DwCrow = fgets($handle);
-            if ($i < $skip)
+            if ($i < $start)
             {
                 continue;
             }
             if (! $skippingDone)
             {
-                $output->writeln('<header>skipped ' . $skip . ' rows</header>');
+                $output->writeln('<header>skipped ' . $start . ' rows</header>');
                 $skippingDone = TRUE;
             }
 
@@ -94,14 +96,14 @@ EOT
 //            $output->writeln('<header>' . $response . '</header>');
             if ($i % 10000 == 0)
             {
-                $output->writeln('<header>' . ( round((($i - $skip) / ($rows - $skip) * 100), 2) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
+                $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 2) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
             }
         }
             
         fclose($handle);
 
         // Summary
-        $output->writeln('<header>Total rows = '.$i.' </header>');
+        $output->writeln('<header>Finished on row ' . $end . '</header>');
     }
 
     protected function handleRow($DwCrow)

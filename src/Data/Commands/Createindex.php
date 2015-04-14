@@ -72,7 +72,7 @@ EOT
                     'type' => 'double'
                 ),
                 'coordinates' => array(
-                    "type": 'geo_point'
+                    "type" => 'geo_point'
                 ),
                 'eventDate' => array(
                     'type' => 'date',
@@ -89,7 +89,7 @@ EOT
                 ),
                 'eventDateHour' => array(
                     'type' => 'short'
-                )
+                ),
                 'identifiedBy' => array(
                     'type' => 'string',
                     'index' => 'not_analyzed'
