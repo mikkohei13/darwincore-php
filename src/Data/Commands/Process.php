@@ -94,7 +94,7 @@ EOT
 //            $output->writeln('<header>' . $response . '</header>');
             if ($i % 10000 == 0)
             {
-                $output->writeln('<header>' . ( round((($i - $skip) / ($rows - $skip) * 100), 1) ) . '% done (' . ( $i / 1000 ) . 'k)</header>');
+                $output->writeln('<header>' . ( round((($i - $skip) / ($rows - $skip) * 100), 2) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
             }
         }
             

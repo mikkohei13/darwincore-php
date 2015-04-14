@@ -18,6 +18,7 @@ Commands:
 TODO
 ----
 
+- Geoshape
 - Handle missing dates; show only amount while indexing and at the end
 - Code cleanup
 - (Progress indicator)
@@ -29,6 +30,9 @@ TODO
 
 CLIPS
 -----
+
+Kibana
+localhost:5601
 
 Marvel
 http://localhost:9200/_plugin/marvel/sense/index.html
