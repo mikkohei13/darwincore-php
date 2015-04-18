@@ -110,29 +110,41 @@ EOT
 
 //            $output->writeln('<header>' . $response . '</header>'); // debug
 
-            // Intermediate report
-            if ($i % self::BULK_SIZE == 0)
+            // Intermediate report or end of file
+            if ($i % self::BULK_SIZE == 0 || FALSE === $DwCrow)
             {
                 $responses = $this->client->bulk($this->single);
                 $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
 
+//                print_r ($this->single); // debug
                 unset($this->single);
                 $this->single = Array();
 
                 $this->benchmark['bulkIndexing'] += microtime(TRUE) - $startTime;
+            }
+            // End of file
+            if (FALSE === $DwCrow)
+            {
+                break;
             }
         }
             
         fclose($handle);
 
         // Summary
-        $output->writeln('<header>Finished on row ' . $end . '</header>');
+        $output->writeln('<header>Finished</header>');
         print_r ($this->benchmark);
     }
 
     // Make conversions and index the row
     protected function handleRow($DwCrow)
     {
+        // Stop if no data
+        if (FALSE === $DwCrow)
+        {
+            return;
+        }
+
         $startTime = microtime(TRUE);
 
         $data = Array();
@@ -216,8 +228,6 @@ EOT
         );
 
         $this->single['body'][] = $params['body'];
-
-//        print_r ($single); // debug
 
         // Save into index
 //        $ret = $this->client->index($params);
