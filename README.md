@@ -15,10 +15,18 @@ Commands:
 	app/console data:createindex
 	app/console data:process --file data/datafile.txt
 
+
+Benchmarks
+----------
+
+Indexing single record at a time is the bottleneck: ~96 % of row handling time (131s/100k rows) goes to indexing.
+
+
+
 TODO
 ----
 
-- index name as an argument (both commands)
+- index name as an argument / setting (both commands)
 - Batch update
 - Geoshape
 - Handle missing dates; show only amount while indexing and at the end
@@ -35,6 +43,7 @@ TODO
 - define analysis and mapping in settings file
 
 
+
 CLIPS
 -----
 
@@ -44,7 +53,7 @@ localhost:5601
 Marvel
 http://localhost:9200/_plugin/marvel/sense/index.html
 
-	# Delete the `gb` index
+	# Delete the `gbif` index
 	DELETE /gbif
 
 	# Check new mapping

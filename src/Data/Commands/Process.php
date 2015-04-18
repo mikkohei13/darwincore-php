@@ -17,6 +17,8 @@ class Process extends Command {
     var $catalogNumberFieldNumber = FALSE;
     var $client = FALSE;
 
+    var $benchmark = Array();
+
     protected function configure()
     {   
         $start = 0;
@@ -58,10 +60,10 @@ EOT
            throw new \InvalidArgumentException('Row count must be higher than zero.');
         }
 */
-        // Process
+        // Start processing
         $output->writeln('<header>Processing data from ' . $fileName . ', running to start line on row ' . $start . '</header>');
 
-//        $output->writeln('<header>' . getcwd() . '</header>');
+//        $output->writeln('<header>' . getcwd() . '</header>'); // debug
 
         $handle = fopen($fileName, 'r');
 
@@ -77,10 +79,13 @@ EOT
         $i = 0;
         $skippingDone = FALSE;
 
+        // Go through the lines
         while ($i < $end)
         {
             $i++;
             $DwCrow = fgets($handle);
+
+            // Skip lines
             if ($i < $start)
             {
                 continue;
@@ -91,9 +96,12 @@ EOT
                 $skippingDone = TRUE;
             }
 
+            // Handle the row
             $this->handleRow($DwCrow);
 
-//            $output->writeln('<header>' . $response . '</header>');
+//            $output->writeln('<header>' . $response . '</header>'); // debug
+
+            // Intermediate report
             if ($i % 10000 == 0)
             {
                 $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 2) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
@@ -104,10 +112,14 @@ EOT
 
         // Summary
         $output->writeln('<header>Finished on row ' . $end . '</header>');
+        print_r ($this->benchmark);
     }
 
+    // Make conversions and index the row
     protected function handleRow($DwCrow)
     {
+        $startTime = microtime(TRUE);
+
         $data = Array();
         $params = Array();
         $missingDates = 0;
@@ -121,6 +133,8 @@ EOT
 
         $params['id'] = $DwCrowArray[$this->catalogNumberFieldNumber];
 
+        $this->benchmark['setup'] += microtime(TRUE) - $startTime;
+
         // Goes through each selected field
         foreach ($this->selectedFields as $fieldNumber => $fieldName)
         {
@@ -132,7 +146,7 @@ EOT
             {
                 if (empty($fieldValue))
                 {
-                    // Add nothing
+                    // Don't add empty date
                 }
                 else
                 {
@@ -172,6 +186,8 @@ EOT
 //            print_r ($rowArray);
         }
 
+        $this->benchmark['fieldConversion'] += microtime(TRUE) - $startTime;
+
         // Set coord only if both lat and lon are set
         if ($lat && $lon)
         {
@@ -180,8 +196,12 @@ EOT
 
         $params['body']  = $data;
 
+        $this->benchmark['moving'] += microtime(TRUE) - $startTime;
+
         // Save into index
         $ret = $this->client->index($params);
+
+        $this->benchmark['indexing'] += microtime(TRUE) - $startTime;
 
 //        print_r($params);
 //        print_r($ret);
