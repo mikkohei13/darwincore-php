@@ -17,7 +17,7 @@ class Process extends Command {
     var $catalogNumberFieldNumber = FALSE;
     var $client = FALSE;
     var $single = Array();
-
+    const BULK_SIZE = 10000;
 
     var $benchmark = Array();
 
@@ -104,7 +104,7 @@ EOT
 //            $output->writeln('<header>' . $response . '</header>'); // debug
 
             // Intermediate report
-            if ($i % 10 == 0)
+            if ($i % self::BULK_SIZE == 0)
             {
                 $responses = $this->client->bulk($this->single);
                 $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
