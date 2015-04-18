@@ -16,6 +16,8 @@ class Process extends Command {
     var $selectedFields = Array();
     var $catalogNumberFieldNumber = FALSE;
     var $client = FALSE;
+    var $single = Array();
+
 
     var $benchmark = Array();
 
@@ -102,9 +104,13 @@ EOT
 //            $output->writeln('<header>' . $response . '</header>'); // debug
 
             // Intermediate report
-            if ($i % 10000 == 0)
+            if ($i % 10 == 0)
             {
-                $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 2) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
+                $responses = $this->client->bulk($this->single);
+                $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
+
+                unset($this->single);
+                $this->single = Array();
             }
         }
             
@@ -112,7 +118,7 @@ EOT
 
         // Summary
         $output->writeln('<header>Finished on row ' . $end . '</header>');
-        print_r ($this->benchmark);
+//        print_r ($this->benchmark);
     }
 
     // Make conversions and index the row
@@ -126,7 +132,7 @@ EOT
         $lat = FALSE;
         $lon = FALSE;
 
-        $params['index'] = 'gbif2';
+        $params['index'] = 'gbif_bulk';
         $params['type']  = 'occurrence';
 
         $DwCrowArray = explode("\t", $DwCrow);
@@ -198,13 +204,24 @@ EOT
 
         $this->benchmark['moving'] += microtime(TRUE) - $startTime;
 
+
+        $this->single['body'][] = array(
+            'index' => array(
+                '_id' => $params['id'],
+                "_index" => $params['index'],
+                "_type" => $params['type']
+            )
+        );
+
+        $this->single['body'][] = $params['body'];
+
+//        print_r ($single); // debug
+
         // Save into index
-        $ret = $this->client->index($params);
+//        $ret = $this->client->index($params);
+
 
         $this->benchmark['indexing'] += microtime(TRUE) - $startTime;
-
-//        print_r($params);
-//        print_r($ret);
     }
 
     protected function selectFields($handle)
