@@ -19,8 +19,25 @@ Commands:
 Benchmarks
 ----------
 
-Indexing single record at a time is the bottleneck: ~96 % of row handling time (131s/100k rows) goes to indexing.
+Indexing single record at a time:
+131 seconds / 100k rows
+~96 % of row handling time goes to indexing.
 
+Bulk indexing 1 k records at a time:
+13,8 seconds / 100 k rows
+~68 % of processing time goes to indexing.
+
+Bulk indexing 10 k records at a time:
+11.5 seconds / 100 k rows
+~67 % of processing time goes to indexing.
+
+Bulk indexing 50 k records at a time:
+12.3 seconds / 100 k rows
+~66 % of processing time goes to indexing.
+
+Bulk indexing 100 k records at a time:
+13,2 seconds / 100 k rows
+~63 % of processing time goes to indexing.
 
 
 TODO

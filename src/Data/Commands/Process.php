@@ -84,6 +84,7 @@ EOT
         // Go through the lines
         while ($i < $end)
         {
+            $startTime = microtime(TRUE);
             $i++;
             $DwCrow = fgets($handle);
 
@@ -98,8 +99,14 @@ EOT
                 $skippingDone = TRUE;
             }
 
+            $this->benchmark['skipping'] += microtime(TRUE) - $startTime;
+            $startTime = microtime(TRUE);
+
             // Handle the row
             $this->handleRow($DwCrow);
+
+            $this->benchmark['rowHandling'] += microtime(TRUE) - $startTime;
+            $startTime = microtime(TRUE);
 
 //            $output->writeln('<header>' . $response . '</header>'); // debug
 
@@ -111,6 +118,8 @@ EOT
 
                 unset($this->single);
                 $this->single = Array();
+
+                $this->benchmark['bulkIndexing'] += microtime(TRUE) - $startTime;
             }
         }
             
@@ -118,7 +127,7 @@ EOT
 
         // Summary
         $output->writeln('<header>Finished on row ' . $end . '</header>');
-//        print_r ($this->benchmark);
+        print_r ($this->benchmark);
     }
 
     // Make conversions and index the row
@@ -138,8 +147,6 @@ EOT
         $DwCrowArray = explode("\t", $DwCrow);
 
         $params['id'] = $DwCrowArray[$this->catalogNumberFieldNumber];
-
-        $this->benchmark['setup'] += microtime(TRUE) - $startTime;
 
         // Goes through each selected field
         foreach ($this->selectedFields as $fieldNumber => $fieldName)
@@ -192,8 +199,6 @@ EOT
 //            print_r ($rowArray);
         }
 
-        $this->benchmark['fieldConversion'] += microtime(TRUE) - $startTime;
-
         // Set coord only if both lat and lon are set
         if ($lat && $lon)
         {
@@ -201,9 +206,6 @@ EOT
         }
 
         $params['body']  = $data;
-
-        $this->benchmark['moving'] += microtime(TRUE) - $startTime;
-
 
         $this->single['body'][] = array(
             'index' => array(
@@ -219,9 +221,6 @@ EOT
 
         // Save into index
 //        $ret = $this->client->index($params);
-
-
-        $this->benchmark['indexing'] += microtime(TRUE) - $startTime;
     }
 
     protected function selectFields($handle)
