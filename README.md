@@ -18,6 +18,7 @@ Commands:
 TODO
 ----
 
+- index name as an argument (both commands)
 - Batch update
 - Geoshape
 - Handle missing dates; show only amount while indexing and at the end
@@ -29,7 +30,7 @@ TODO
 - rows = end
 - skip = start
 - remove empty fields
-- set index propersties (shards, replicas)
+- set index properties (shards, replicas)
 - split date and time into parts
 - define analysis and mapping in settings file
 

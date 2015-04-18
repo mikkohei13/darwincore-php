@@ -111,8 +111,10 @@ EOT
         $data = Array();
         $params = Array();
         $missingDates = 0;
+        $lat = FALSE;
+        $lon = FALSE;
 
-        $params['index'] = 'gbif';
+        $params['index'] = 'gbif2';
         $params['type']  = 'occurrence';
 
         $DwCrowArray = explode("\t", $DwCrow);
@@ -125,11 +127,38 @@ EOT
             $fieldValue = $DwCrowArray[$fieldNumber];
 //            $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
 
-            if ("eventDate" == $fieldName && empty($fieldValue))
+            // Date
+            if ("eventDate" == $fieldName)
             {
-//                echo "\nempty eventDate on row " . $params['id'];
-                $data[$fieldName] = null;
+                if (empty($fieldValue))
+                {
+                    // Add nothing
+                }
+                else
+                {
+                    $data['eventDate'] = $fieldValue;
+
+                    // Presume format "yyyy-MM-dd HH:mm:ss"
+                    $temp = explode(" ", $fieldValue);
+                    $dateParts = explode("-", $temp[0]);
+                    $timeParts = explode(":", $temp[1]);
+
+                    $data['eventDateYear'] = $dateParts[0];
+                    $data['eventDateMonth'] = $dateParts[1];
+                    $data['eventDateDay'] = $dateParts[2];
+                    $data['eventDateHour'] = $timeParts[0];
+                }
             }
+            // Coordinates
+            elseif ("decimalLatitude" == $fieldName && !empty($fieldValue))
+            {
+                $lat = $fieldValue;
+            }
+            elseif ("decimalLongitude" == $fieldName && !empty($fieldValue))
+            {
+                $lon = $fieldValue;
+            }
+            // All other fields
             else
             {
                 $data[$fieldName] = $fieldValue;
@@ -142,8 +171,16 @@ EOT
             }
 //            print_r ($rowArray);
         }
+
+        // Set coord only if both lat and lon are set
+        if ($lat && $lon)
+        {
+            $data['coordinates'] = $lat . ", " . $lon;
+        }
+
         $params['body']  = $data;
 
+        // Save into index
         $ret = $this->client->index($params);
 
 //        print_r($params);

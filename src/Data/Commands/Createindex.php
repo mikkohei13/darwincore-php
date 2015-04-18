@@ -99,7 +99,7 @@ EOT
 
         $indexParams['body']['settings']['number_of_shards']   = 3;
         $indexParams['body']['settings']['number_of_replicas'] = 0;
-        $indexParams['index']  = 'gbif';
+        $indexParams['index']  = 'gbif2';
 
         $indexParams['body']['mappings']['occurrence'] = $typeMapping;
 
