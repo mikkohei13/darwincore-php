@@ -29,7 +29,7 @@ app/console data:process --file data/verbatim.txt --start 10 --end 100
 ```
 
 Note
-------------
+----
 - Expects that 
 	- First row of datafile contains Darwin Core terms
 	- id or gbifID is an unique identifier for each row
