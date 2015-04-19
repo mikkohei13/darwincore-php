@@ -73,8 +73,10 @@ Example indexing
 
 TODO
 ----
+- Problem: Kibana doen't show documents without date. Date can be in different formats, so parsing can be difficult. What to support?
+
 - Doesn't index if eof before first(?) bulk size limit
-- species name can be in species or scientificName field
+- species name can be in species or scientificName field; combine into one field without author
 - Misses some rows? Chek with Tiira's first 10k lines, or is this about Kibana's time limit?
 - Code cleanup
 

@@ -118,6 +118,9 @@ EOT
 //                print_r ($this->single); // debug
 
                 $responses = $this->client->bulk($this->single);
+
+//                print_r ($responses); // debug
+
                 $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
 
 //                print_r ($this->single); // debug
