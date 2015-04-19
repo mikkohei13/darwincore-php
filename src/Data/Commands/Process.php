@@ -152,12 +152,11 @@ EOT
         $lat = FALSE;
         $lon = FALSE;
 
-        $params['index'] = 'gbif_bulk';
+        $params['index'] = 'gbif_bulk2';
         $params['type']  = 'occurrence';
 
         $DwCrowArray = explode("\t", $DwCrow);
 
-        if (isset())
         $params['id'] = $DwCrowArray[$this->identifierFieldNumber];
 
         // Goes through each selected field
