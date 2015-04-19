@@ -17,6 +17,8 @@ class Process extends Command {
     var $identifierFieldNumber = FALSE;
     var $client = FALSE;
     var $single = Array();
+    var $examplePrinted = FALSE;
+
     const BULK_SIZE = 10000;
 
     var $benchmark = Array();
@@ -110,17 +112,13 @@ EOT
 
 //            $output->writeln('<header>' . $response . '</header>'); // debug
 
-            echo "row " . $i . " done\n";
-
             // Intermediate report or end of file
             if ($i % self::BULK_SIZE == 0 || FALSE === $DwCrow)
             {
-                echo "a1\n";
-//                print_r ($this->single);
+//                print_r ($this->single); // debug
 
                 $responses = $this->client->bulk($this->single);
                 $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
-                echo "a2\n";
 
 //                print_r ($this->single); // debug
                 unset($this->single);
@@ -167,7 +165,6 @@ EOT
         // Goes through each selected field
         foreach ($this->selectedFields as $fieldNumber => $fieldName)
         {
-  //          echo "x1\n";
 
             $fieldValue = $DwCrowArray[$fieldNumber];
 //            $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
@@ -197,15 +194,11 @@ EOT
             }
             */
 
-   //         echo "x2\n";
-
             // Analyzed data fields
-            if ("species" == $fieldName || "locality" == $fieldName || "issue_" == $fieldName)
+            if ("species" == $fieldName || "scientificName" == $fieldName || "locality" == $fieldName || "issue_" == $fieldName)
             {
                 $data[$fieldName . "_ana"] = $fieldValue;
             }
-
-  //          echo "x3\n";
 
             // Coordinates
             if ("decimalLatitude" == $fieldName && !empty($fieldValue))
@@ -217,15 +210,11 @@ EOT
                 $lon = $fieldValue;
             }
 
- //           echo "x4\n";
-
             // All fields, except empty
             if (!empty($fieldValue))
             {
                 $data[$fieldName] = $fieldValue;
             }
-
-//            echo "x5\n";
 
 //            print_r ($rowArray);
         }
@@ -254,6 +243,13 @@ EOT
         );
 
         $this->single['body'][] = $params['body'];
+
+        if (! $this->examplePrinted)
+        {
+            echo "Example data:\n";
+            print_r ($this->single);
+            $this->examplePrinted = TRUE;
+        }
 
         // Save into index
 //        $ret = $this->client->index($params);

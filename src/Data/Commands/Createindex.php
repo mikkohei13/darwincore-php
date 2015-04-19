@@ -93,6 +93,14 @@ EOT
                     'type' => 'string',
                     'index' => 'not_analyzed'
                 ),
+                'scientificName_ana' => array(
+                    'type' => 'string',
+                    'analyzer' => 'standard'
+                ),
+                'scientificName' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
                 'scientificNameAuthorship' => array(
                     'type' => 'string',
                     'index' => 'not_analyzed'

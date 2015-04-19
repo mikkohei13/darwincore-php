@@ -13,6 +13,7 @@ $settingsSelectedFields['order'] = TRUE;
 $settingsSelectedFields['family'] = TRUE;
 $settingsSelectedFields['genus'] = TRUE;
 $settingsSelectedFields['species'] = TRUE;
+$settingsSelectedFields['scientificName'] = TRUE;
 $settingsSelectedFields['scientificNameAuthorship'] = TRUE;
 $settingsSelectedFields['taxonRank'] = TRUE;
 $settingsSelectedFields['continent'] = TRUE;

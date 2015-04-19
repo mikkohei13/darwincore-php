@@ -73,9 +73,9 @@ Example indexing
 
 TODO
 ----
-- Handle missing day, month, year
 - Doesn't index if eof before first(?) bulk size limit
-- Misses some rows? Chek with Tiira's first 10k lines
+- species name can be in species or scientificName field
+- Misses some rows? Chek with Tiira's first 10k lines, or is this about Kibana's time limit?
 - Code cleanup
 
 - Index name as an argument / setting (both commands)
