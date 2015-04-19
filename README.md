@@ -75,6 +75,7 @@ Example indexing
 TODO
 ----
 - Doesn't index if eof before first(?) bulk size limit
+- Dataset name (from where?)
 - species name can be in species or scientificName field; combine into one field without author
 - Misses some rows? Chek with Tiira's first 10k lines, or is this about Kibana's time limit?
 - Code cleanup
