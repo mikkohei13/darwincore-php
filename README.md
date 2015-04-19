@@ -72,6 +72,7 @@ Example indexing
 
 TODO
 ----
+- Doesn't index if eof before first(?) bulk size limit
 - Use more fields from occurrence.txt
 - Use GBIF record ID as identifier
 - Index name as an argument / setting (both commands)

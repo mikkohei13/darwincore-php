@@ -166,6 +166,7 @@ EOT
 //            $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
 
             // Date
+            /*
             if ("eventDate" == $fieldName)
             {
                 if (empty($fieldValue))
@@ -187,8 +188,9 @@ EOT
                     $data['eventDateHour'] = $timeParts[0];
                 }
             }
+            */
             // Coordinates
-            elseif ("decimalLatitude" == $fieldName && !empty($fieldValue))
+            if ("decimalLatitude" == $fieldName && !empty($fieldValue))
             {
                 $lat = $fieldValue;
             }
@@ -214,6 +216,11 @@ EOT
         if ($lat && $lon)
         {
             $data['coordinates'] = $lat . ", " . $lon;
+        }
+        // Set eventDate only if full date set
+        if ($data["year"] && $data["month"] && $data["day"])
+        {
+            $data['eventDate'] = $data["year"] . "-" . $data["month"] . "-" . $data["day"] . " 00:00:00";
         }
 
         $params['body']  = $data;
