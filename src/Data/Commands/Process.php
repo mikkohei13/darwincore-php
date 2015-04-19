@@ -213,12 +213,12 @@ EOT
 
         // Combined fields
         // Set coord only if both lat and lon are set
-        if ($data["decimalLatitude"] && $data["decimalLongitude"])
+        if (!empty($data["decimalLatitude"]) && !empty($data["decimalLongitude"]))
         {
             $data['coordinates'] = $data["decimalLatitude"] . ", " . $data["decimalLongitude"];
         }
         // Set eventDate only if full date set
-        if ($data["year"] && $data["month"] && $data["day"])
+        if (!empty($data["year"]) && !empty($data["month"]) && !empty($data["day"]))
         {
             $data['eventDate'] = $data["year"] . "-" . $data["month"] . "-" . $data["day"] . " 00:00:00";
         }
