@@ -39,35 +39,36 @@ Benchmarks (2015-04-18)
 -----------------------
 
 Indexing single record at a time:
-131 seconds / 100k rows
-~96 % of row handling time goes to indexing.
+- 131 seconds / 100k rows
+- ~96 % of row handling time goes to indexing.
 
 Bulk indexing 1 k records at a time:
-13,8 seconds / 100 k rows
-~68 % of processing time goes to indexing.
+- 13,8 seconds / 100 k rows
+- ~68 % of processing time goes to indexing.
 
 Bulk indexing 10 k records at a time:
-11.5 seconds / 100 k rows
-~67 % of processing time goes to indexing.
-
-	Birdlife Finland: Tiira information service.
-	Accessed via http://www.gbif.org/dataset/be2af664-2990-4153-99b5-d92bbd8cdb0e on 2015-04-19 
-	- With index mapping as in https://github.com/mikkohei13/darwincore-php/blob/171876c71a788a59afe30613830cd2c48f028a1b/src/Data/Commands/Createindex.php
-	- 11.964.093 rows indexed in 28,14 minutes (= 1688,6 seconds), which is 7085 records / second
-	- 60,8 % of processing time goes to indexing
-	- Indexed data uses
-		- 56,2 MB of Elasticsearch memory
-		- 10.4 MB of Lucene memory
-		- 1,8 GB of disk space
+- 11.5 seconds / 100 k rows
+- ~67 % of processing time goes to indexing.
 
 Bulk indexing 50 k records at a time:
-12.3 seconds / 100 k rows
-~66 % of processing time goes to indexing.
+- 12.3 seconds / 100 k rows
+- ~66 % of processing time goes to indexing.
 
 Bulk indexing 100 k records at a time:
-13,2 seconds / 100 k rows
-~63 % of processing time goes to indexing.
+- 13,2 seconds / 100 k rows
+- ~63 % of processing time goes to indexing.
 
+Example indexing
+- Birdlife Finland: Tiira information service -dataset http://www.gbif.org/dataset/be2af664-2990-4153-99b5-d92bbd8cdb0e on 2015-04-19 
+- 10 k records at a time
+- With index mapping as in https://github.com/mikkohei13/darwincore-php/blob/171876c71a788a59afe30613830cd2c48f028a1b/src/Data/Commands/Createindex.php
+- Time to index
+	- 11.964.093 rows indexed in 28,14 minutes (= 1688,6 seconds), which is 7085 records / second
+	- 60,8 % of processing time goes to indexing
+- Indexed data uses
+	- 56,2 MB of Elasticsearch memory
+	- 10.4 MB of Lucene memory
+	- 1,8 GB of disk space
 
 TODO
 ----
