@@ -42,6 +42,16 @@ EOT
                 'enabled' => true
             ),
             'properties' => array(
+                'id' => array(
+                    'type' => 'long'
+                ),
+                'gbifID' => array(
+                    'type' => 'long'
+                ),
+                'institutionCode' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
                 'collectionCode' => array(
                     'type' => 'string',
                     'index' => 'not_analyzed'
@@ -82,6 +92,10 @@ EOT
                     'type' => 'string',
                     'index' => 'not_analyzed'
                 ),
+                'scientificNameAuthorship' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
                 'taxonRank' => array(
                     'type' => 'string',
                     'index' => 'not_analyzed'
@@ -91,6 +105,10 @@ EOT
                     'index' => 'not_analyzed'
                 ),
                 'countryCode' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'stateProvince' => array(
                     'type' => 'string',
                     'index' => 'not_analyzed'
                 ),
@@ -119,7 +137,14 @@ EOT
                 'coordinates' => array(
                     "type" => 'geo_point'
                 ),
-                'eventDate' => array(
+                 'coordinateUncertaintyInMeters' => array(
+                    'type' => 'integer'
+                ),
+                'geodeticDatum' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+               'eventDate' => array(
                     'type' => 'date',
                     "format" => "yyyy-MM-dd HH:mm:ss"
                 ),
@@ -153,7 +178,7 @@ EOT
 
         $indexParams['body']['settings']['number_of_shards']   = 3;
         $indexParams['body']['settings']['number_of_replicas'] = 0;
-        $indexParams['index']  = 'gbif3';
+        $indexParams['index']  = 'gbif4';
 
         $indexParams['body']['mappings']['occurrence'] = $typeMapping;
 

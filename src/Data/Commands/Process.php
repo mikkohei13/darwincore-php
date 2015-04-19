@@ -152,7 +152,7 @@ EOT
         $lat = FALSE;
         $lon = FALSE;
 
-        $params['index'] = 'gbif3';
+        $params['index'] = 'gbif4';
         $params['type']  = 'occurrence';
 
         $DwCrowArray = explode("\t", $DwCrow);
@@ -207,7 +207,6 @@ EOT
 
             // All fields
             $data[$fieldName] = $fieldValue;
-
 //            print_r ($rowArray);
         }
 
