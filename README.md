@@ -72,16 +72,16 @@ Example indexing
 
 TODO
 ----
+- Handle missing day, month, year
 - Doesn't index if eof before first(?) bulk size limit
-- Misses some rows?
+- Misses some rows? Chek with Tiira's first 10k lines
 - Code cleanup
-- Index name as an argument / setting (both commands)
-- Define analysis and mapping in settings file
-- Unset empty fields
 
-- remove fields that are only analyzed (issue)
+- Index name as an argument / setting (both commands)
+- Define analysis and mapping in settings file instead of createIndex
+
+- Remove fields that are only analyzed (issue)
 - Handle missing coordinates
-- split date and time into parts
 - Speed up conversion scripts
 
 

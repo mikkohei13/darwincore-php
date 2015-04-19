@@ -203,7 +203,7 @@ EOT
                 $lon = $fieldValue;
             }
 
-            // All fields
+            // All fields, except empty
             if (!empty($fieldValue))
             {
                 $data[$fieldName] = $fieldValue;
@@ -225,6 +225,7 @@ EOT
 
         $params['body']  = $data;
 
+        // TODO: do this only once
         $this->single['body'][] = array(
             'index' => array(
                 '_id' => $params['id'],
