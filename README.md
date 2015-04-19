@@ -107,3 +107,6 @@ http://localhost:9200/_plugin/marvel/sense/index.html
 
 	GET /gbif/_mapping?pretty=true
 
+Extract first 100 lines of file
+
+	head occurrence.txt -n 100 > occurrence-part.txt

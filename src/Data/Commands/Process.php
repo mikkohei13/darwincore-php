@@ -14,7 +14,7 @@ use Elasticsearch;
 class Process extends Command {
 
     var $selectedFields = Array();
-    var $catalogNumberFieldNumber = FALSE;
+    var $identifierFieldNumber = FALSE;
     var $client = FALSE;
     var $single = Array();
     const BULK_SIZE = 10000;
@@ -23,6 +23,7 @@ class Process extends Command {
 
     protected function configure()
     {   
+        // Default values
         $start = 0;
         $end = 10;
         $fileName = "demo.txt";
@@ -99,14 +100,12 @@ EOT
                 $skippingDone = TRUE;
             }
 
-            $this->benchmark['skipping'] += microtime(TRUE) - $startTime;
-            $startTime = microtime(TRUE);
+            $this->benchmark['skipping'] += microtime(TRUE) - $startTime; $startTime = microtime(TRUE);
 
             // Handle the row
             $this->handleRow($DwCrow);
 
-            $this->benchmark['rowHandling'] += microtime(TRUE) - $startTime;
-            $startTime = microtime(TRUE);
+            $this->benchmark['rowHandling'] += microtime(TRUE) - $startTime; $startTime = microtime(TRUE);
 
 //            $output->writeln('<header>' . $response . '</header>'); // debug
 
@@ -158,7 +157,8 @@ EOT
 
         $DwCrowArray = explode("\t", $DwCrow);
 
-        $params['id'] = $DwCrowArray[$this->catalogNumberFieldNumber];
+        if (isset())
+        $params['id'] = $DwCrowArray[$this->identifierFieldNumber];
 
         // Goes through each selected field
         foreach ($this->selectedFields as $fieldNumber => $fieldName)
@@ -246,9 +246,11 @@ EOT
             if (@$settingsSelectedFields[$fieldName] == TRUE)
             {
                 $this->selectedFields[$fieldNumber] = $fieldName;
-                if ("catalogNumberField" == $fieldName)
+
+                // pick either id or gbifID as identifier
+                if ("id" == $fieldName || "gbifID" == $fieldName)
                 {
-                    $this->catalogNumberFieldNumber = $fieldNumber;
+                    $this->identifierFieldNumber = $fieldNumber;
                 }
             }
         }
