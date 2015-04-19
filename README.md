@@ -28,13 +28,14 @@ app/console data:process --file data/verbatim.txt --start 10 --end 100
 
 ```
 
-Expectations
+Note
 ------------
-- First row of datafile contains Darwin Core terms
-- id or gbifID is an unique identifier for each row
+- Expects that 
+	- First row of datafile contains Darwin Core terms
+	- id or gbifID is an unique identifier for each row
 
 - If datatypes don't match, bulk indexing can fail. (E.g. indexing string into long fails.)
-
+- If dates are in incorrect format (with/without time), bulk inserting can fail or be extremely slow
 
 Benchmarks (2015-04-18)
 -----------------------
@@ -73,8 +74,6 @@ Example indexing
 
 TODO
 ----
-- Problem: Kibana doen't show documents without date. Date can be in different formats, so parsing can be difficult. What to support?
-
 - Doesn't index if eof before first(?) bulk size limit
 - species name can be in species or scientificName field; combine into one field without author
 - Misses some rows? Chek with Tiira's first 10k lines, or is this about Kibana's time limit?

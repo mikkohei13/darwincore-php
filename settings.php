@@ -26,6 +26,7 @@ $settingsSelectedFields['decimalLatitude'] = TRUE;
 $settingsSelectedFields['decimalLongitude'] = TRUE;
 $settingsSelectedFields['coordinateUncertaintyInMeters'] = TRUE;
 $settingsSelectedFields['geodeticDatum'] = TRUE;
+$settingsSelectedFields['eventDate'] = TRUE;
 $settingsSelectedFields['year'] = TRUE;
 $settingsSelectedFields['month'] = TRUE;
 $settingsSelectedFields['day'] = TRUE;

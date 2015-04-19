@@ -154,8 +154,7 @@ EOT
                     'index' => 'not_analyzed'
                 ),
                'eventDate' => array(
-                    'type' => 'date',
-                    "format" => "yyyy-MM-dd HH:mm:ss"
+                    'type' => 'date'
                 ),
                 'year' => array(
                     'type' => 'short'

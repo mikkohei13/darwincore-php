@@ -107,6 +107,7 @@ EOT
 
             // Handle the row
             $this->handleRow($DwCrow);
+            echo "Row $i handled\n";
 
             $this->benchmark['rowHandling'] += microtime(TRUE) - $startTime; $startTime = microtime(TRUE); // benchmark
 
@@ -228,10 +229,34 @@ EOT
         {
             $data['coordinates'] = $data["decimalLatitude"] . ", " . $data["decimalLongitude"];
         }
+
         // Set eventDate only if full date set
         if (!empty($data["year"]) && !empty($data["month"]) && !empty($data["day"]))
         {
-            $data['eventDate'] = $data["year"] . "-" . $data["month"] . "-" . $data["day"] . " 00:00:00";
+            $data['eventDate'] = $data["year"] . "-" . $data["month"] . "-" . $data["day"];
+        }
+        // Try to parse eventDate
+        elseif (!empty($data['eventDate']))
+        {
+            echo "Parsing date: " . $data['eventDate'] . " -> "; // debug
+
+            $dateBeginAndEnd = explode("/", $data['eventDate']);
+            $dateAndTime = explode("T", $dateBeginAndEnd[0]);
+            $dateAndTime = explode(" ", $dateAndTime[0]);
+            $dateParts = explode("-", $dateAndTime[0]);
+
+            unset($data['eventDate']);
+
+            if (strlen($dateParts[0]) == 4)
+            {
+                $data['eventDate'] = $dateParts[0] . "-" . $dateParts[1] . "-" . $dateParts[2];
+            }
+            else
+            {
+                $data['eventDate'] = $dateParts[2] . "-" . $dateParts[1] . "-" . $dateParts[0];
+            }
+
+            echo $data['eventDate'] . " \n"; // debug
         }
 
         $params['body']  = $data;
