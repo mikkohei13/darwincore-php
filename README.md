@@ -72,27 +72,26 @@ Example indexing
 
 TODO
 ----
-
-- index name as an argument / setting (both commands)
-- Batch update
-- Geoshape
-- Handle missing dates; show only amount while indexing and at the end
-- Code cleanup
-- (Progress indicator)
-- Speed
-- Specify from which line to start indexing from; http://stackoverflow.com/questions/514673/how-do-i-open-a-file-from-line-x-to-line-y-in-php - make sure correct amount of rows are skipped
+- Use more fields from occurrence.txt
+- Use GBIF record ID as identifier
+- Index name as an argument / setting (both commands)
+- Define analysis and mapping in settings file
 - Handle missing coordinates
-- rows = end
-- skip = start
-- remove empty fields
-- set index properties (shards, replicas)
 - split date and time into parts
-- define analysis and mapping in settings file
-
+- Speed up conversion scripts
+- Code cleanup
 
 
 CLIPS
 -----
+
+Starting Elasticsearcn and Kibana with 8 Gb of RAM
+
+	/PATH-TO/elasticsearch
+	sudo ./bin/elasticsearch -Xmx4g -Xms4g
+
+	/PATH-TO/kibana
+	sudo ./bin/kibana
 
 Kibana
 localhost:5601
