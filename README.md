@@ -73,14 +73,15 @@ Example indexing
 TODO
 ----
 - Doesn't index if eof before first(?) bulk size limit
-- Use more fields from occurrence.txt
-- Use GBIF record ID as identifier
+- Misses some rows?
+- Code cleanup
 - Index name as an argument / setting (both commands)
 - Define analysis and mapping in settings file
+
+- remove fields that are only analyzed (issue)
 - Handle missing coordinates
 - split date and time into parts
 - Speed up conversion scripts
-- Code cleanup
 
 
 CLIPS

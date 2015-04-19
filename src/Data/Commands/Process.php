@@ -152,7 +152,7 @@ EOT
         $lat = FALSE;
         $lon = FALSE;
 
-        $params['index'] = 'gbif_bulk2';
+        $params['index'] = 'gbif3';
         $params['type']  = 'occurrence';
 
         $DwCrowArray = explode("\t", $DwCrow);
@@ -189,6 +189,12 @@ EOT
                 }
             }
             */
+            // Analyzed data fields
+            if ("species" == $fieldName || "locality" == $fieldName || "issue_" == $fieldName)
+            {
+                $data[$fieldName . "_ana"] = $fieldValue;
+            }
+
             // Coordinates
             if ("decimalLatitude" == $fieldName && !empty($fieldValue))
             {
@@ -198,24 +204,18 @@ EOT
             {
                 $lon = $fieldValue;
             }
-            // All other fields
-            else
-            {
-                $data[$fieldName] = $fieldValue;
-            }
 
-            // Duplicate data fields
-            if ("scientificName" == $fieldName)
-            {
-                $data["scientificName_exact"] = $fieldValue;
-            }
+            // All fields
+            $data[$fieldName] = $fieldValue;
+
 //            print_r ($rowArray);
         }
 
+        // Combined fields
         // Set coord only if both lat and lon are set
-        if ($lat && $lon)
+        if ($data["decimalLatitude"] && $data["decimalLongitude"])
         {
-            $data['coordinates'] = $lat . ", " . $lon;
+            $data['coordinates'] = $data["decimalLatitude"] . ", " . $data["decimalLongitude"];
         }
         // Set eventDate only if full date set
         if ($data["year"] && $data["month"] && $data["day"])

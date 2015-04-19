@@ -42,26 +42,71 @@ EOT
                 'enabled' => true
             ),
             'properties' => array(
-                'catalogNumber' => array(
-                    'type' => 'integer'
+                'collectionCode' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
                 ),
-                'scientificName' => array(
+                'publishingCountry' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'kingdom' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'phylum' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'class' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'order' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'family' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'genus' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'species_ana' => array(
                     'type' => 'string',
                     'analyzer' => 'standard'
                 ),
-                'scientificName_exact' => array(
+                'species' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'taxonRank' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'continent' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'countryCode' => array(
                     'type' => 'string',
                     'index' => 'not_analyzed'
                 ),
                 'county' => array(
                     'type' => 'string',
-                    'analyzer' => 'standard'
+                    'index' => 'not_analyzed'
                 ),
-                'locality' => array(
+                'municipality' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'locality_ana' => array(
                     'type' => 'string',
                     'analyzer' => 'standard'
                 ),
-                'locality_exact' => array(
+                'locality' => array(
                     'type' => 'string',
                     'index' => 'not_analyzed'
                 ),
@@ -87,19 +132,28 @@ EOT
                 'eventDateDay' => array(
                     'type' => 'short'
                 ),
-                'eventDateHour' => array(
-                    'type' => 'short'
-                ),
                 'identifiedBy' => array(
                     'type' => 'string',
                     'index' => 'not_analyzed'
-                )
+                ),
+                'hasCoordinate' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'hasGeospatialIssues' => array(
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ),
+                'issue_ana' => array(
+                    'type' => 'string',
+                    'analyzer' => 'standard'
+                ),
             )
         );
 
         $indexParams['body']['settings']['number_of_shards']   = 3;
         $indexParams['body']['settings']['number_of_replicas'] = 0;
-        $indexParams['index']  = 'gbif_bulk2';
+        $indexParams['index']  = 'gbif3';
 
         $indexParams['body']['mappings']['occurrence'] = $typeMapping;
 
