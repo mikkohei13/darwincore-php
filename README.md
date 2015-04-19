@@ -77,6 +77,7 @@ TODO
 - Code cleanup
 - Index name as an argument / setting (both commands)
 - Define analysis and mapping in settings file
+- Unset empty fields
 
 - remove fields that are only analyzed (issue)
 - Handle missing coordinates

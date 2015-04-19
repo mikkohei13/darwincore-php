@@ -149,8 +149,6 @@ EOT
         $data = Array();
         $params = Array();
         $missingDates = 0;
-        $lat = FALSE;
-        $lon = FALSE;
 
         $params['index'] = 'gbif4';
         $params['type']  = 'occurrence';
@@ -206,7 +204,10 @@ EOT
             }
 
             // All fields
-            $data[$fieldName] = $fieldValue;
+            if (!empty($fieldValue))
+            {
+                $data[$fieldName] = $fieldValue;
+            }
 //            print_r ($rowArray);
         }
 
