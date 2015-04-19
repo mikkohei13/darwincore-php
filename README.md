@@ -31,8 +31,9 @@ app/console data:process --file data/verbatim.txt --start 10 --end 100
 Expectations
 ------------
 - First row of datafile contains Darwin Core terms
-- eventDate format is yyyy-MM-dd HH:mm:ss
-- catalogNumber is an unique identifier for each row
+- id or gbifID is an unique identifier for each row
+
+- If datatypes don't match, bulk indexing can fail. (E.g. indexing string into long fails.)
 
 
 Benchmarks (2015-04-18)

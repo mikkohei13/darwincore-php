@@ -85,7 +85,8 @@ EOT
         // Go through the lines
         while ($i < $end)
         {
-            $startTime = microtime(TRUE);
+            $startTime = microtime(TRUE); // benchmark
+
             $i++;
             $DwCrow = fgets($handle);
 
@@ -100,26 +101,32 @@ EOT
                 $skippingDone = TRUE;
             }
 
-            $this->benchmark['skipping'] += microtime(TRUE) - $startTime; $startTime = microtime(TRUE);
+            $this->benchmark['skipping'] += microtime(TRUE) - $startTime; $startTime = microtime(TRUE); // benchmark
 
             // Handle the row
             $this->handleRow($DwCrow);
 
-            $this->benchmark['rowHandling'] += microtime(TRUE) - $startTime; $startTime = microtime(TRUE);
+            $this->benchmark['rowHandling'] += microtime(TRUE) - $startTime; $startTime = microtime(TRUE); // benchmark
 
 //            $output->writeln('<header>' . $response . '</header>'); // debug
+
+            echo "row " . $i . " done\n";
 
             // Intermediate report or end of file
             if ($i % self::BULK_SIZE == 0 || FALSE === $DwCrow)
             {
+                echo "a1\n";
+//                print_r ($this->single);
+
                 $responses = $this->client->bulk($this->single);
                 $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
+                echo "a2\n";
 
 //                print_r ($this->single); // debug
                 unset($this->single);
                 $this->single = Array();
 
-                $this->benchmark['bulkIndexing'] += microtime(TRUE) - $startTime;
+                $this->benchmark['bulkIndexing'] += microtime(TRUE) - $startTime; // benchmark
             }
             // End of file
             if (FALSE === $DwCrow)
@@ -150,7 +157,7 @@ EOT
         $params = Array();
         $missingDates = 0;
 
-        $params['index'] = 'gbif4';
+        $params['index'] = 'gbif5';
         $params['type']  = 'occurrence';
 
         $DwCrowArray = explode("\t", $DwCrow);
@@ -160,6 +167,8 @@ EOT
         // Goes through each selected field
         foreach ($this->selectedFields as $fieldNumber => $fieldName)
         {
+  //          echo "x1\n";
+
             $fieldValue = $DwCrowArray[$fieldNumber];
 //            $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
 
@@ -187,11 +196,16 @@ EOT
                 }
             }
             */
+
+   //         echo "x2\n";
+
             // Analyzed data fields
             if ("species" == $fieldName || "locality" == $fieldName || "issue_" == $fieldName)
             {
                 $data[$fieldName . "_ana"] = $fieldValue;
             }
+
+  //          echo "x3\n";
 
             // Coordinates
             if ("decimalLatitude" == $fieldName && !empty($fieldValue))
@@ -203,11 +217,16 @@ EOT
                 $lon = $fieldValue;
             }
 
+ //           echo "x4\n";
+
             // All fields, except empty
             if (!empty($fieldValue))
             {
                 $data[$fieldName] = $fieldValue;
             }
+
+//            echo "x5\n";
+
 //            print_r ($rowArray);
         }
 
@@ -262,6 +281,7 @@ EOT
             }
         }
 
+        echo "Selected fields in this dataset:\n";
         print_r ($this->selectedFields);
     }
 

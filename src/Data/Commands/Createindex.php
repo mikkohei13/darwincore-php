@@ -43,7 +43,8 @@ EOT
             ),
             'properties' => array(
                 'id' => array(
-                    'type' => 'long'
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
                 ),
                 'gbifID' => array(
                     'type' => 'long'
@@ -178,7 +179,7 @@ EOT
 
         $indexParams['body']['settings']['number_of_shards']   = 3;
         $indexParams['body']['settings']['number_of_replicas'] = 0;
-        $indexParams['index']  = 'gbif4';
+        $indexParams['index']  = 'gbif5';
 
         $indexParams['body']['mappings']['occurrence'] = $typeMapping;
 
