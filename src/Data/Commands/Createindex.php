@@ -148,13 +148,13 @@ EOT
                     'type' => 'date',
                     "format" => "yyyy-MM-dd HH:mm:ss"
                 ),
-                'eventDateYear' => array(
+                'year' => array(
                     'type' => 'short'
                 ),
-                'eventDateMonth' => array(
+                'month' => array(
                     'type' => 'short'
                 ),
-                'eventDateDay' => array(
+                'day' => array(
                     'type' => 'short'
                 ),
                 'identifiedBy' => array(
