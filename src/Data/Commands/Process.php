@@ -107,7 +107,7 @@ EOT
 
             // Handle the row
             $this->handleRow($DwCrow);
-            echo "Row $i handled\n";
+//            echo "Row $i handled\n";
 
             $this->benchmark['rowHandling'] += microtime(TRUE) - $startTime; $startTime = microtime(TRUE); // benchmark
 
@@ -238,7 +238,7 @@ EOT
         // Try to parse eventDate
         elseif (!empty($data['eventDate']))
         {
-            echo "Parsing date: " . $data['eventDate'] . " -> "; // debug
+//            echo "Parsing date: " . $data['eventDate'] . " -> "; // debug
 
             $dateBeginAndEnd = explode("/", $data['eventDate']);
             $dateAndTime = explode("T", $dateBeginAndEnd[0]);
@@ -249,14 +249,15 @@ EOT
 
             if (strlen($dateParts[0]) == 4)
             {
-                $data['eventDate'] = $dateParts[0] . "-" . $dateParts[1] . "-" . $dateParts[2];
+                @$data['eventDate'] = $dateParts[0] . "-" . $dateParts[1] . "-" . $dateParts[2];
             }
             else
             {
-                $data['eventDate'] = $dateParts[2] . "-" . $dateParts[1] . "-" . $dateParts[0];
+                @$data['eventDate'] = $dateParts[2] . "-" . $dateParts[1] . "-" . $dateParts[0];
             }
+            $data['eventDate'] = trim($data['eventDate'], "-");
 
-            echo $data['eventDate'] . " \n"; // debug
+//            echo $data['eventDate'] . " \n"; // debug
         }
 
         $params['body']  = $data;
