@@ -1,32 +1,53 @@
 
-PHP command line tools for reading large DwC datasets into Elasticsearch.
+PHP command line tools for reading large GBIF datasets into Elasticsearch.
 
 Installation
 ------------
 
 	composer install --no-dev
 
-Usage
-------
 
 Setup
+------
 
 - Place datafiles to /data
 - Select which fields to index on settings.php
 - (set index name on process.php and createindex.php)
+	$params['index'] = 'gbif5';
+	$indexParams['index']  = 'gbif5';
 
 Commands
+--------
 
-Create an index
+'''Create an index'''
 ```
 app/console data:createindex
 ```
 
-Index data
+'''Index data'''
 ```
 app/console data:process --file data/verbatim.txt --start 10 --end 100
 
 ```
+
+Todo - checks
+-------------
+
+- Picking rows from datafile for analysis
+- Identifiers
+- Indexing
+- Analyzed data fields
+- Date formats
+
+'''TODO'''
+- Upgrade to ES 5.1
+- PHP library with composer?
+- Set index name in one place
+- set which fields are analyzed in one place?
+- Document code
+- Summary of GBIF data quality
+- index into Amazon service
+
 
 Note
 ----
