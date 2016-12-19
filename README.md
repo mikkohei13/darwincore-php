@@ -123,15 +123,17 @@ OLD: Starting Elasticsearc and Kibana with 8 Gb of RAM
 
 
 
-Delete an index
+'''Delete an index'''
 
 	curl -XDELETE "http://elastic:changeme@192.168.56.10/INDEXNAME"
 
-Extract first 100 lines of file
+Kibana holds it's own data on indices and index patterns, so you have to delete the index from Kibana also, to see it fully gone.
+
+'''Extract first 100 lines of file'''
 
 	head occurrence.txt -n 100 > occurrence-part.txt
 
-Extract every 100th line of file
+'''Extract every 100th line of file'''
 
 	sed -n '0~100p' input.csv > output.csv
 

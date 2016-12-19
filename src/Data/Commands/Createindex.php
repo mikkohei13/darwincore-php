@@ -2,9 +2,6 @@
 
 namespace Data\Commands;
 
-require 'vendor/autoload.php';
-
-
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,7 +36,6 @@ EOT
         $output->getFormatter()->setStyle('header', $header_style);
 
         $hosts = ['http://elastic:changeme@192.168.56.10:9200'];
-
         $client = ClientBuilder::create()->setHosts($hosts)->build();
 
         // Example Index Mapping
