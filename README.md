@@ -137,3 +137,9 @@ http://localhost:9200/_plugin/marvel/sense/index.html
 Extract first 100 lines of file
 
 	head occurrence.txt -n 100 > occurrence-part.txt
+
+Extract every 100th line of file
+
+	sed -n '0~100p' input.csv > output.csv
+
+
