@@ -126,18 +126,19 @@ EOT
             // Row limit (-e) reached
             if ($i == $end)
             {
-                $this->bulkIndex($output);
+                $this->bulkIndex();
                 break;
             }
             // Bulk threshold
             if ($i % self::BULK_SIZE == 0)
             {
-                $this->bulkIndex($output);
+                $this->bulkIndex();
+                $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
             }
             // End of file
             elseif (FALSE === $DwCrow)
             {
-                $this->bulkIndex($output);
+                $this->bulkIndex();
                 break;
             }
         }
@@ -149,15 +150,13 @@ EOT
         print_r ($this->benchmark);
     }
 
-    protected function bulkIndex(OutputInterface $output)
+    protected function bulkIndex()
     {
         $responses = $this->client->bulk($this->single);
-        echo "Responses: \n"; print_r ($responses); // DEBUG
+//        echo "Responses: \n"; print_r ($responses); // DEBUG
         unset($responses);
 
-        $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
-
-        echo "Single: \n"; print_r ($this->single); // DEBUG
+//        echo "Single: \n"; print_r ($this->single); // DEBUG
         unset($this->single);
         $this->single = Array();
 
@@ -255,7 +254,16 @@ EOT
         // Set eventDate only if full date set
         if (!empty($data["year"]) && !empty($data["month"]) && !empty($data["day"]))
         {
-            $data['date'] = $data["year"] . "-" . $data["month"] . "-" . $data["day"];
+            $fullMonth = substr(("0" . $data["month"]), -2, 2);
+            $fullDay = substr(("0" . $data["day"]), -2, 2);
+
+            // Just in case (DEBUG)
+            if (strlen($fullMonth) != 2 || strlen($fullDay) != 2)
+            {
+                exit("Invalid month/day: $fullMonth $fullDay");
+            }
+
+            $data['date'] = $data["year"] . "-" . $fullMonth . "-" . $fullDay;
         }
         /*
         // Try to parse eventDate
@@ -300,7 +308,7 @@ EOT
         // Print example data of first line
         if (! $this->examplePrinted)
         {
-            echo "Example data prepared:\n";
+            echo "Example data prepared (first row):\n";
             print_r ($this->single);
             $this->examplePrinted = TRUE;
         }

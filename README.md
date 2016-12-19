@@ -127,7 +127,9 @@ OLD: Starting Elasticsearc and Kibana with 8 Gb of RAM
 
 	curl -XDELETE "http://elastic:changeme@192.168.56.10/INDEXNAME"
 
-Kibana holds it's own data on indices and index patterns, so you have to delete the index from Kibana also, to see it fully gone.
+Note: Kibana holds it's own data on indices and index patterns, so you have to delete the index from Kibana also, to see it fully gone.
+
+Note: Kibana refuses to work properly, if date field contain invalid dates(?) such as 2016-012-006
 
 '''Extract first 100 lines of file'''
 

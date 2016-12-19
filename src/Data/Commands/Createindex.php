@@ -48,20 +48,16 @@ EOT
                     'type' => 'long'
                 ),
                 'institutioncode' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'species_ana' => array(
-                    'type' => 'string',
-                    'analyzer' => 'standard'
+                    'type' => 'keyword',
                 ),
                 'species' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
+                    'type' => 'keyword',
+                ),
+                'species_ana' => array(
+                    'type' => 'text',
                 ),
                 'countrycode' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
+                    'type' => 'keyword',
                 ),
                 'decimallatitude' => array(
                     'type' => 'double'
