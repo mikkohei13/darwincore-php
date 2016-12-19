@@ -112,7 +112,7 @@ TODO
 CLIPS
 -----
 
-Starting Elasticsearcn and Kibana with 8 Gb of RAM
+OLD: Starting Elasticsearc and Kibana with 8 Gb of RAM
 
 	/PATH-TO/elasticsearch
 	sudo ./bin/elasticsearch -Xmx4g -Xms4g
@@ -120,19 +120,12 @@ Starting Elasticsearcn and Kibana with 8 Gb of RAM
 	/PATH-TO/kibana
 	sudo ./bin/kibana
 
-Kibana
-localhost:5601
 
-Marvel
-http://localhost:9200/_plugin/marvel/sense/index.html
 
-	# Delete the `gbif` index
-	DELETE /gbif
 
-	# Check new mapping
-	GET /gbif/_mapping/occurrence
+Delete an index
 
-	GET /gbif/_mapping?pretty=true
+	curl -XDELETE "http://elastic:changeme@192.168.56.10/INDEXNAME"
 
 Extract first 100 lines of file
 
