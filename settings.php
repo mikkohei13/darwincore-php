@@ -1,7 +1,7 @@
 <?php
 
 // Fields to process
-$settingsSelectedFields['gbifID'] = TRUE;
+$settingsSelectedFields['gbifid'] = TRUE;
 $settingsSelectedFields['species'] = TRUE;
 $settingsSelectedFields['countrycode'] = TRUE;
 $settingsSelectedFields['decimallatitude'] = TRUE;

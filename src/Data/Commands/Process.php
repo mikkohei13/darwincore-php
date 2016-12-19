@@ -68,8 +68,9 @@ EOT
         // Start processing
         $output->writeln('<header>Processing data from ' . $fileName . ', running to start line on row ' . $start . '</header>');
 
-//        $output->writeln('<header>' . getcwd() . '</header>'); // debug
+//        $output->writeln('<header>' . getcwd() . '</header>'); // DEBUG
 
+        // Read file
         $handle = fopen($fileName, 'r');
 
         if (! $handle)
@@ -77,15 +78,17 @@ EOT
             throw new Exception('Could not open file ' . $fileName);
         }
 
+        // Picks firlds to process
         $this->selectFields($handle);
 
+        // Connects to elasticsearch
         $hosts = ['http://elastic:changeme@192.168.56.10:9200'];
         $this->client = ClientBuilder::create()->setHosts($hosts)->build();
 
         $i = 0;
         $skippingDone = FALSE;
 
-        // Go through the lines
+        // Goes through the lines
         while ($i < $end)
         {
             $startTime = microtime(TRUE); // benchmark
@@ -112,20 +115,20 @@ EOT
 
             $this->benchmark['rowHandling'] += microtime(TRUE) - $startTime; $startTime = microtime(TRUE); // benchmark
 
-//            $output->writeln('<header>' . $response . '</header>'); // debug
+//            $output->writeln('<header>' . $response . '</header>'); // DEBUG
 
             // Intermediate report or end of file
             if ($i % self::BULK_SIZE == 0 || FALSE === $DwCrow)
             {
-//                print_r ($this->single); // debug
+//                print_r ($this->single); // DEBUG
 
                 $responses = $this->client->bulk($this->single);
 
-//                print_r ($responses); // debug
+//                print_r ($responses); // DEBUG
 
                 $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
 
-//                print_r ($this->single); // debug
+//                print_r ($this->single); // DEBUG
                 unset($this->single);
                 $this->single = Array();
 
@@ -200,20 +203,22 @@ EOT
             */
 
             // Analyzed data fields
-            if ("species" == $fieldName || "scientificName" == $fieldName || "locality" == $fieldName || "issue_" == $fieldName)
+            if ("species" == $fieldName)
             {
                 $data[$fieldName . "_ana"] = $fieldValue;
             }
 
             // Coordinates
-            if ("decimalLatitude" == $fieldName && !empty($fieldValue))
+            /*
+            if ("decimallatitude" == $fieldName && !empty($fieldValue))
             {
                 $lat = $fieldValue;
             }
-            elseif ("decimalLongitude" == $fieldName && !empty($fieldValue))
+            elseif ("decimallongitude" == $fieldName && !empty($fieldValue))
             {
                 $lon = $fieldValue;
             }
+            */
 
             // All fields, except empty
             if (!empty($fieldValue))
@@ -226,20 +231,21 @@ EOT
 
         // Combined fields
         // Set coord only if both lat and lon are set
-        if (!empty($data["decimalLatitude"]) && !empty($data["decimalLongitude"]))
+        if (!empty($data["decimallatitude"]) && !empty($data["decimallongitude"]))
         {
-            $data['coordinates'] = $data["decimalLatitude"] . ", " . $data["decimalLongitude"];
+            $data['coordinates'] = $data["decimallatitude"] . ", " . $data["decimallongitude"];
         }
 
         // Set eventDate only if full date set
         if (!empty($data["year"]) && !empty($data["month"]) && !empty($data["day"]))
         {
-            $data['eventDate'] = $data["year"] . "-" . $data["month"] . "-" . $data["day"];
+            $data['date'] = $data["year"] . "-" . $data["month"] . "-" . $data["day"];
         }
+        /*
         // Try to parse eventDate
         elseif (!empty($data['eventDate']))
         {
-//            echo "Parsing date: " . $data['eventDate'] . " -> "; // debug
+//            echo "Parsing date: " . $data['eventDate'] . " -> "; // DEBUG
 
             $dateBeginAndEnd = explode("/", $data['eventDate']);
             $dateAndTime = explode("T", $dateBeginAndEnd[0]);
@@ -258,8 +264,9 @@ EOT
             }
             $data['eventDate'] = trim($data['eventDate'], "-");
 
-//            echo $data['eventDate'] . " \n"; // debug
+//            echo $data['eventDate'] . " \n"; // DEBUG
         }
+        */
 
         $params['body']  = $data;
 
@@ -274,6 +281,7 @@ EOT
 
         $this->single['body'][] = $params['body'];
 
+        // Print example data of first line
         if (! $this->examplePrinted)
         {
             echo "Example data:\n";
@@ -281,17 +289,20 @@ EOT
             $this->examplePrinted = TRUE;
         }
 
-        // Save into index
+        exit("TEST RUN ENDED"); //DEBUG
+
+        // Save single record into index
 //        $ret = $this->client->index($params);
     }
 
+    // Picks selected fields column numbers to a variable
     protected function selectFields($handle)
     {
-        include_once "settings.php";
+        require_once "settings.php";
 
         $fileFieldsRow = fgets($handle);
         $fileFieldsArray = explode("\t", $fileFieldsRow);
-//        print_r ($fileFieldsArray);
+        print_r ($fileFieldsArray); // DEBUG
 
         foreach ($fileFieldsArray as $fieldNumber => $fieldName)
         {
