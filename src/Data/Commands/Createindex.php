@@ -69,6 +69,9 @@ EOT
                 'decimallongitude' => array(
                     'type' => 'double'
                 ),
+                'coordinates' => array(
+                    'type' => 'geo_point'
+                ),
                 'year' => array(
                     'type' => 'short'
                 ),

@@ -22,6 +22,7 @@ class Process extends Command {
     const BULK_SIZE = 10000;
 
     var $benchmark = Array();
+    var $startTime = 0;
 
     protected function configure()
     {   
@@ -49,6 +50,11 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+        $this->benchmark['skipping'] = 0;
+        $this->benchmark['rowHandling'] = 0;
+        $this->benchmark['bulkIndexing'] = 0;
+
         // Styles
         $header_style = new OutputFormatterStyle('white', 'green', array('bold'));
         $output->getFormatter()->setStyle('header', $header_style);
@@ -91,7 +97,7 @@ EOT
         // Goes through the lines
         while ($i < $end)
         {
-            $startTime = microtime(TRUE); // benchmark
+            $this->startTime = microtime(TRUE); // benchmark
 
             $i++;
             $DwCrow = fgets($handle);
@@ -107,36 +113,31 @@ EOT
                 $skippingDone = TRUE;
             }
 
-            $this->benchmark['skipping'] += microtime(TRUE) - $startTime; $startTime = microtime(TRUE); // benchmark
+            $this->benchmark['skipping'] += microtime(TRUE) - $this->startTime; $this->startTime = microtime(TRUE); // benchmark
 
             // Handle the row
             $this->handleRow($DwCrow);
 //            echo "Row $i handled\n";
 
-            $this->benchmark['rowHandling'] += microtime(TRUE) - $startTime; $startTime = microtime(TRUE); // benchmark
+            $this->benchmark['rowHandling'] += microtime(TRUE) - $this->startTime; $this->startTime = microtime(TRUE); // benchmark
 
-//            $output->writeln('<header>' . $response . '</header>'); // DEBUG
+//            echo "/" . $DwCrow . "/\n"; // DEBUG ABBA
 
-            // Intermediate report or end of file
-            if ($i % self::BULK_SIZE == 0 || FALSE === $DwCrow)
+            // Row limit (-e) reached
+            if ($i == $end)
             {
-//                print_r ($this->single); // DEBUG
-
-                $responses = $this->client->bulk($this->single);
-
-//                print_r ($responses); // DEBUG
-
-                $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
-
-//                print_r ($this->single); // DEBUG
-                unset($this->single);
-                $this->single = Array();
-
-                $this->benchmark['bulkIndexing'] += microtime(TRUE) - $startTime; // benchmark
+                $this->bulkIndex($output);
+                break;
+            }
+            // Bulk threshold
+            if ($i % self::BULK_SIZE == 0)
+            {
+                $this->bulkIndex($output);
             }
             // End of file
-            if (FALSE === $DwCrow)
+            elseif (FALSE === $DwCrow)
             {
+                $this->bulkIndex($output);
                 break;
             }
         }
@@ -148,6 +149,21 @@ EOT
         print_r ($this->benchmark);
     }
 
+    protected function bulkIndex(OutputInterface $output)
+    {
+        $responses = $this->client->bulk($this->single);
+        echo "Responses: \n"; print_r ($responses); // DEBUG
+        unset($responses);
+
+        $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
+
+        echo "Single: \n"; print_r ($this->single); // DEBUG
+        unset($this->single);
+        $this->single = Array();
+
+        $this->benchmark['bulkIndexing'] += microtime(TRUE) - $this->startTime; // benchmark
+    }
+
     // Make conversions and index the row
     protected function handleRow($DwCrow)
     {
@@ -157,7 +173,7 @@ EOT
             return;
         }
 
-        $startTime = microtime(TRUE);
+        $this->startTime = microtime(TRUE);
 
         $data = Array();
         $params = Array();
@@ -233,7 +249,7 @@ EOT
         // Set coord only if both lat and lon are set
         if (!empty($data["decimallatitude"]) && !empty($data["decimallongitude"]))
         {
-            $data['coordinates'] = $data["decimallatitude"] . ", " . $data["decimallongitude"];
+            $data['coordinates'] = $data["decimallatitude"] . "," . $data["decimallongitude"];
         }
 
         // Set eventDate only if full date set
@@ -284,12 +300,12 @@ EOT
         // Print example data of first line
         if (! $this->examplePrinted)
         {
-            echo "Example data:\n";
+            echo "Example data prepared:\n";
             print_r ($this->single);
             $this->examplePrinted = TRUE;
         }
 
-        exit("TEST RUN ENDED"); //DEBUG
+//        exit("TEST RUN ENDED"); //DEBUG
 
         // Save single record into index
 //        $ret = $this->client->index($params);
