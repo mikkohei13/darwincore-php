@@ -123,17 +123,17 @@ EOT
 
 //            echo "/" . $DwCrow . "/\n"; // DEBUG ABBA
 
+            // Bulk threshold
+            if ($i % self::BULK_SIZE == 0)
+            {
+                $this->bulkIndex();
+                $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 1) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
+            }
             // Row limit (-e) reached
             if ($i == $end)
             {
                 $this->bulkIndex();
                 break;
-            }
-            // Bulk threshold
-            if ($i % self::BULK_SIZE == 0)
-            {
-                $this->bulkIndex();
-                $output->writeln('<header>' . ( round((($i - $start) / $totalRows * 100), 3) ) . '% done (row ' . ( $i / 1000 ) . 'k)</header>');
             }
             // End of file
             elseif (FALSE === $DwCrow)
