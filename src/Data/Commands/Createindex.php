@@ -2,6 +2,9 @@
 
 namespace Data\Commands;
 
+require 'vendor/autoload.php';
+
+
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -9,7 +12,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Exception;
-use Elasticsearch;
+use Elasticsearch\ClientBuilder;
+
 
 
 class Createindex extends Command {
@@ -34,7 +38,9 @@ EOT
         $header_style = new OutputFormatterStyle('white', 'green', array('bold'));
         $output->getFormatter()->setStyle('header', $header_style);
 
-        $client = new Elasticsearch\Client();
+        $hosts = ['http://elastic:changeme@192.168.56.10:9200'];
+
+        $client = ClientBuilder::create()->setHosts($hosts)->build();
 
         // Example Index Mapping
         $typeMapping = array(
@@ -42,46 +48,10 @@ EOT
                 'enabled' => true
             ),
             'properties' => array(
-                'id' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'gbifID' => array(
+                'gbifid' => array(
                     'type' => 'long'
                 ),
-                'institutionCode' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'collectionCode' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'publishingCountry' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'kingdom' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'phylum' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'class' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'order' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'family' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'genus' => array(
+                'institutioncode' => array(
                     'type' => 'string',
                     'index' => 'not_analyzed'
                 ),
@@ -93,68 +63,15 @@ EOT
                     'type' => 'string',
                     'index' => 'not_analyzed'
                 ),
-                'scientificName_ana' => array(
-                    'type' => 'string',
-                    'analyzer' => 'standard'
-                ),
-                'scientificName' => array(
+                'countrycode' => array(
                     'type' => 'string',
                     'index' => 'not_analyzed'
                 ),
-                'scientificNameAuthorship' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'taxonRank' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'continent' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'countryCode' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'stateProvince' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'county' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'municipality' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'locality_ana' => array(
-                    'type' => 'string',
-                    'analyzer' => 'standard'
-                ),
-                'locality' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'decimalLatitude' => array(
+                'decimallatitude' => array(
                     'type' => 'double'
                 ),
-                'decimalLongitude' => array(
+                'decimallongitude' => array(
                     'type' => 'double'
-                ),
-                'coordinates' => array(
-                    "type" => 'geo_point'
-                ),
-                 'coordinateUncertaintyInMeters' => array(
-                    'type' => 'integer'
-                ),
-                'geodeticDatum' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-               'eventDate' => array(
-                    'type' => 'date'
                 ),
                 'year' => array(
                     'type' => 'short'
@@ -165,21 +82,8 @@ EOT
                 'day' => array(
                     'type' => 'short'
                 ),
-                'identifiedBy' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'hasCoordinate' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'hasGeospatialIssues' => array(
-                    'type' => 'string',
-                    'index' => 'not_analyzed'
-                ),
-                'issue_ana' => array(
-                    'type' => 'string',
-                    'analyzer' => 'standard'
+                'date' => array(
+                    'type' => 'date'
                 ),
             )
         );

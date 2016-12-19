@@ -298,8 +298,8 @@ EOT
             {
                 $this->selectedFields[$fieldNumber] = $fieldName;
 
-                // pick either id or gbifID as identifier
-                if ("id" == $fieldName || "gbifID" == $fieldName)
+                // Pick identifier column number also to a separate variable
+                if ("gbifid" == $fieldName)
                 {
                     $this->identifierFieldNumber = $fieldNumber;
                 }
