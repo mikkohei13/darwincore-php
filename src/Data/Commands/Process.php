@@ -16,7 +16,7 @@ class Process extends Command {
     var $selectedFields = Array();
     var $identifierFieldNumber = FALSE;
     var $client = FALSE;
-    var $single = Array();
+    var $dataArrayPreparedForIndexing = Array();
     var $examplePrinted = FALSE;
 
     const BULK_SIZE = 10000;
@@ -48,9 +48,11 @@ EOT
 );
     }
 
+    // ---------------------------------------------------------------------------------
+    // Executes the command from terminal
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
+        // Setup
         $this->benchmark['skipping'] = 0;
         $this->benchmark['rowHandling'] = 0;
         $this->benchmark['bulkIndexing'] = 0;
@@ -65,20 +67,11 @@ EOT
         $totalRows = $end - $start;
         $fileName  = $input->getOption('file');
 
-/*
-        if ($rows < 0)
-        {
-           throw new \InvalidArgumentException('Row count must be higher than zero.');
-        }
-*/
         // Start processing
         $output->writeln('<header>Processing data from ' . $fileName . ', running to start line on row ' . $start . '</header>');
 
-//        $output->writeln('<header>' . getcwd() . '</header>'); // DEBUG
-
         // Read file
         $handle = fopen($fileName, 'r');
-
         if (! $handle)
         {
             throw new Exception('Could not open file ' . $fileName);
@@ -150,20 +143,23 @@ EOT
         print_r ($this->benchmark);
     }
 
+    // ---------------------------------------------------------------------------------
+    // Bulk indexes several rows of data
     protected function bulkIndex()
     {
-        $responses = $this->client->bulk($this->single);
+        $responses = $this->client->bulk($this->dataArrayPreparedForIndexing);
 //        echo "Responses: \n"; print_r ($responses); // DEBUG
         unset($responses);
 
-//        echo "Single: \n"; print_r ($this->single); // DEBUG
-        unset($this->single);
-        $this->single = Array();
+//        echo "dataArrayPreparedForIndexing: \n"; print_r ($this->dataArrayPreparedForIndexing); // DEBUG
+        unset($this->dataArrayPreparedForIndexing);
+        $this->dataArrayPreparedForIndexing = Array();
 
         $this->benchmark['bulkIndexing'] += microtime(TRUE) - $this->startTime; // benchmark
     }
 
-    // Make conversions and index the row
+    // ---------------------------------------------------------------------------------
+    // Prepare a row to be indexed
     protected function handleRow($DwCrow)
     {
         // Stop if no data
@@ -178,44 +174,17 @@ EOT
         $params = Array();
         $missingDates = 0;
 
-        $params['index'] = 'gbif5';
+        $params['index'] = 'gbif-test';
         $params['type']  = 'occurrence';
 
         $DwCrowArray = explode("\t", $DwCrow);
 
         $params['id'] = $DwCrowArray[$this->identifierFieldNumber];
 
-        // Goes through each selected field
+        // Goes through each selected field. Fields are selected in the settings.php file.
         foreach ($this->selectedFields as $fieldNumber => $fieldName)
         {
-
             $fieldValue = $DwCrowArray[$fieldNumber];
-//            $html .= $fieldName . ": " . $rowArray[$fieldNumber] . "\n";
-
-            // Date
-            /*
-            if ("eventDate" == $fieldName)
-            {
-                if (empty($fieldValue))
-                {
-                    // Don't add empty date
-                }
-                else
-                {
-                    $data['eventDate'] = $fieldValue;
-
-                    // Presume format "yyyy-MM-dd HH:mm:ss"
-                    $temp = explode(" ", $fieldValue);
-                    $dateParts = explode("-", $temp[0]);
-                    $timeParts = explode(":", $temp[1]);
-
-                    $data['eventDateYear'] = $dateParts[0];
-                    $data['eventDateMonth'] = $dateParts[1];
-                    $data['eventDateDay'] = $dateParts[2];
-                    $data['eventDateHour'] = $timeParts[0];
-                }
-            }
-            */
 
             // Analyzed data fields
             if ("species" == $fieldName)
@@ -223,28 +192,15 @@ EOT
                 $data[$fieldName . "_ana"] = $fieldValue;
             }
 
-            // Coordinates
-            /*
-            if ("decimallatitude" == $fieldName && !empty($fieldValue))
-            {
-                $lat = $fieldValue;
-            }
-            elseif ("decimallongitude" == $fieldName && !empty($fieldValue))
-            {
-                $lon = $fieldValue;
-            }
-            */
-
-            // All fields, except empty
+            // All selected fields, except empty
             if (!empty($fieldValue))
             {
                 $data[$fieldName] = $fieldValue;
             }
-
-//            print_r ($rowArray);
         }
 
-        // Combined fields
+        // Additional fields, which are combined from several other fields
+
         // Set coord only if both lat and lon are set
         if (!empty($data["decimallatitude"]) && !empty($data["decimallongitude"]))
         {
@@ -265,37 +221,10 @@ EOT
 
             $data['date'] = $data["year"] . "-" . $fullMonth . "-" . $fullDay;
         }
-        /*
-        // Try to parse eventDate
-        elseif (!empty($data['eventDate']))
-        {
-//            echo "Parsing date: " . $data['eventDate'] . " -> "; // DEBUG
 
-            $dateBeginAndEnd = explode("/", $data['eventDate']);
-            $dateAndTime = explode("T", $dateBeginAndEnd[0]);
-            $dateAndTime = explode(" ", $dateAndTime[0]);
-            $dateParts = explode("-", $dateAndTime[0]);
-
-            unset($data['eventDate']);
-
-            if (strlen($dateParts[0]) == 4)
-            {
-                @$data['eventDate'] = $dateParts[0] . "-" . $dateParts[1] . "-" . $dateParts[2];
-            }
-            else
-            {
-                @$data['eventDate'] = $dateParts[2] . "-" . $dateParts[1] . "-" . $dateParts[0];
-            }
-            $data['eventDate'] = trim($data['eventDate'], "-");
-
-//            echo $data['eventDate'] . " \n"; // DEBUG
-        }
-        */
-
-        $params['body']  = $data;
-
-        // TODO: do this only once
-        $this->single['body'][] = array(
+        // Setup indexing array
+        // First metadata...
+        $this->dataArrayPreparedForIndexing['body'][] = array(
             'index' => array(
                 '_id' => $params['id'],
                 "_index" => $params['index'],
@@ -303,23 +232,22 @@ EOT
             )
         );
 
-        $this->single['body'][] = $params['body'];
+        // ...then the data
+        $this->dataArrayPreparedForIndexing['body'][] = $data;
 
-        // Print example data of first line
+        // Print example data if not printed yet
         if (! $this->examplePrinted)
         {
             echo "Example data prepared (first row):\n";
-            print_r ($this->single);
+            print_r ($this->dataArrayPreparedForIndexing);
             $this->examplePrinted = TRUE;
         }
 
 //        exit("TEST RUN ENDED"); //DEBUG
-
-        // Save single record into index
-//        $ret = $this->client->index($params);
     }
 
-    // Picks selected fields column numbers to a variable
+    // ---------------------------------------------------------------------------------
+    // Picks selected fields' column numbers to a variable
     protected function selectFields($handle)
     {
         require_once "settings.php";
@@ -345,5 +273,7 @@ EOT
         echo "Selected fields in this dataset:\n";
         print_r ($this->selectedFields);
     }
+
+    // ---------------------------------------------------------------------------------
 
 }

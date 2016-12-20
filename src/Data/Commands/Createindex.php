@@ -85,7 +85,7 @@ EOT
 
         $indexParams['body']['settings']['number_of_shards']   = 3;
         $indexParams['body']['settings']['number_of_replicas'] = 0;
-        $indexParams['index']  = 'gbif5';
+        $indexParams['index']  = 'gbif-test';
 
         $indexParams['body']['mappings']['occurrence'] = $typeMapping;
 
