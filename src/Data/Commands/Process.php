@@ -24,8 +24,11 @@ class Process extends Command {
     var $benchmark = Array();
     var $startTime = 0;
 
+    var $settingsIndexName = "gbif-test";
+
+
     protected function configure()
-    {   
+    {
         // Default values
         $start = 0;
         $end = 10;
@@ -174,8 +177,8 @@ EOT
         $params = Array();
         $missingDates = 0;
 
-        $params['index'] = 'gbif-test';
-        $params['type']  = 'occurrence';
+        $params['index'] = $this->settingsIndexName;
+        $params['type']  = "occurrence";
 
         $DwCrowArray = explode("\t", $DwCrow);
 
@@ -251,7 +254,7 @@ EOT
     protected function selectFields($handle)
     {
         require_once "settings.php";
-
+        
         $fileFieldsRow = fgets($handle);
         $fileFieldsArray = explode("\t", $fileFieldsRow);
         print_r ($fileFieldsArray); // DEBUG

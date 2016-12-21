@@ -31,6 +31,8 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $settingsIndexName = 'gbif-test';
+
         // Styles
         $header_style = new OutputFormatterStyle('white', 'green', array('bold'));
         $output->getFormatter()->setStyle('header', $header_style);
@@ -85,7 +87,7 @@ EOT
 
         $indexParams['body']['settings']['number_of_shards']   = 3;
         $indexParams['body']['settings']['number_of_replicas'] = 0;
-        $indexParams['index']  = 'gbif-test';
+        $indexParams['index'] = $settingsIndexName;
 
         $indexParams['body']['mappings']['occurrence'] = $typeMapping;
 

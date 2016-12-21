@@ -1,6 +1,8 @@
 <?php
 
 // Fields to process
+$settingsSelectedFields = Array();
+
 $settingsSelectedFields['gbifid'] = TRUE;
 $settingsSelectedFields['species'] = TRUE;
 $settingsSelectedFields['countrycode'] = TRUE;
