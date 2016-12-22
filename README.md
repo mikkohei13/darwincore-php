@@ -125,7 +125,7 @@ OLD: Starting Elasticsearc and Kibana with 8 Gb of RAM
 
 **Delete an index**
 
-	curl -XDELETE "http://elastic:changeme@192.168.56.10/INDEXNAME"
+	curl -XDELETE "http://elastic:changeme@192.168.56.10:9200/INDEXNAME"
 
 Note: Kibana holds it's own data on indices and index patterns, so you have to delete the index from Kibana also, to see it fully gone.
 
@@ -137,6 +137,6 @@ Note: Kibana refuses to work properly, if date field contain invalid dates(?) su
 
 **Extract every 100th line of file, including first row**
 
-	sed -n '1~100p' input.csv > output.csv
+	sed -n '1~1000p' input.csv > output.csv
 
 
