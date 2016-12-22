@@ -24,7 +24,7 @@ class Process extends Command {
     var $benchmark = Array();
     var $startTime = 0;
 
-    var $settingsIndexName = "gbif-test";
+    var $settingsIndexName = "baltic-aves";
 
 
     protected function configure()
@@ -254,7 +254,7 @@ EOT
     protected function selectFields($handle)
     {
         require_once "settings.php";
-        
+
         $fileFieldsRow = fgets($handle);
         $fileFieldsArray = explode("\t", $fileFieldsRow);
         print_r ($fileFieldsArray); // DEBUG

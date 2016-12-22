@@ -4,6 +4,9 @@
 $settingsSelectedFields = Array();
 
 $settingsSelectedFields['gbifid'] = TRUE;
+$settingsSelectedFields['class'] = TRUE;
+$settingsSelectedFields['order'] = TRUE;
+$settingsSelectedFields['family'] = TRUE;
 $settingsSelectedFields['species'] = TRUE;
 $settingsSelectedFields['countrycode'] = TRUE;
 $settingsSelectedFields['decimallatitude'] = TRUE;

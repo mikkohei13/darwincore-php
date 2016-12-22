@@ -31,7 +31,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $settingsIndexName = 'gbif-test';
+        $settingsIndexName = 'baltic-aves';
 
         // Styles
         $header_style = new OutputFormatterStyle('white', 'green', array('bold'));
@@ -50,6 +50,15 @@ EOT
                     'type' => 'long'
                 ),
                 'institutioncode' => array(
+                    'type' => 'keyword',
+                ),
+                'class' => array(
+                    'type' => 'keyword',
+                ),
+                'order' => array(
+                    'type' => 'keyword',
+                ),
+                'family' => array(
                     'type' => 'keyword',
                 ),
                 'species' => array(
