@@ -24,7 +24,7 @@ class Process extends Command {
     var $benchmark = Array();
     var $startTime = 0;
 
-    var $settingsIndexName = "baltic-aves";
+    var $settingsIndexName = "se-all";
 
 
     protected function configure()

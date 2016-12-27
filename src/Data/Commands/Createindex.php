@@ -31,7 +31,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $settingsIndexName = 'baltic-aves';
+        $settingsIndexName = 'se-all';
 
         // Styles
         $header_style = new OutputFormatterStyle('white', 'green', array('bold'));
@@ -67,7 +67,7 @@ EOT
                 'species_ana' => array(
                     'type' => 'text',
                 ),
-                'countrycode' => array(
+/*                'countrycode' => array(
                     'type' => 'keyword',
                 ),
                 'decimallatitude' => array(
@@ -76,7 +76,7 @@ EOT
                 'decimallongitude' => array(
                     'type' => 'double'
                 ),
-                'coordinates' => array(
+*/                'coordinates' => array(
                     'type' => 'geo_point'
                 ),
                 'year' => array(
