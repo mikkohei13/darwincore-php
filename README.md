@@ -40,9 +40,9 @@ Todo - checks
 - Date formats
 
 '''TODO'''
-- Upgrade to ES 5.1
+- BUGFIX: throws an error, if trying to process exactly 100.00 lines
 - PHP library with composer?
-- Set index name in one place
+- Set index name in one place or in command
 - set which fields are analyzed in one place?
 - Document code
 - Summary of GBIF data quality
@@ -122,6 +122,13 @@ OLD: Starting Elasticsearc and Kibana with 8 Gb of RAM
 
 
 
+**Create an index**
+
+	app/console data:createIndex
+
+**Index data**
+
+	app/console data:process -s 0 -e 100 -f data/datafile.csv
 
 **Delete an index**
 
@@ -137,6 +144,10 @@ Note: Kibana refuses to work properly, if date field contain invalid dates(?) su
 
 **Extract every 100th line of file, including first row**
 
-	sed -n '1~1000p' input.csv > output.csv
+	sed -n '1~100p' input.csv > output.csv
+
+**Count number of lines in a file**
+
+	wc -l filename.csv
 
 
