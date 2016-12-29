@@ -37,7 +37,8 @@ EOT
         $header_style = new OutputFormatterStyle('white', 'green', array('bold'));
         $output->getFormatter()->setStyle('header', $header_style);
 
-        $hosts = ['http://elastic:changeme@192.168.56.10:9200'];
+        // Connects to elasticsearch
+        require_once "../darwincore-php.php";
         $client = ClientBuilder::create()->setHosts($hosts)->build();
 
         // Example Index Mapping

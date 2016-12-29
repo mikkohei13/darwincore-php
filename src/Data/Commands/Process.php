@@ -84,7 +84,7 @@ EOT
         $this->selectFields($handle);
 
         // Connects to elasticsearch
-        $hosts = ['http://elastic:changeme@192.168.56.10:9200'];
+        require_once "../darwincore-php.php";
         $this->client = ClientBuilder::create()->setHosts($hosts)->build();
 
         $i = 0;
