@@ -70,13 +70,13 @@ EOT
 /*                'countrycode' => array(
                     'type' => 'keyword',
                 ),
-                'decimallatitude' => array(
+*/                'decimallatitude' => array(
                     'type' => 'double'
                 ),
                 'decimallongitude' => array(
                     'type' => 'double'
                 ),
-*/                'coordinates' => array(
+                'coordinates' => array(
                     'type' => 'geo_point'
                 ),
                 'year' => array(
