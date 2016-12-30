@@ -106,7 +106,8 @@ EOT
         $client->indices()->create($indexParams);
 
         // Summary
-        $output->writeln('<header>Index created</header>');
+        $output->writeln('<header>Index created to host(s):</header>');
+        print_r ($hosts);
     }
 
 }
