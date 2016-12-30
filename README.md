@@ -7,7 +7,7 @@ Installation
 	composer install --no-dev
 
 
-Setup
+Setup (UPDATE THIS)
 ------
 
 - Place datafiles to /data
@@ -19,16 +19,35 @@ Setup
 Commands
 --------
 
-'''Create an index'''
-```
-app/console data:createindex
-```
+**Create an index**
 
-'''Index data'''
-```
-app/console data:process --file data/verbatim.txt --start 10 --end 100
+	app/console data:createindex
 
-```
+**Index data**
+
+	app/console data:process -s 0 -e 100 -f data/datafile.csv
+	app/console data:process --start 0 --end 100 --file data/datafile.csv
+
+**Delete an index**
+
+	curl -XDELETE "http://elastic:changeme@192.168.56.10:9200/INDEXNAME"
+
+Note: Kibana holds it's own data on indices and index patterns, so you have to delete the index from Kibana also, to see it fully gone.
+
+Note: Kibana refuses to work properly, if date field contain invalid dates(?) such as 2016-012-006
+
+**Extract first 100 lines of file**
+
+	head occurrence.txt -n 100 > occurrence-part.txt
+
+**Extract every 100th line of file, including first row**
+
+	sed -n '1~100p' input.csv > output.csv
+
+**Count number of lines in a file**
+
+	wc -l filename.csv
+
 
 Todo - checks
 -------------
@@ -109,45 +128,15 @@ TODO
 - Speed up conversion scripts
 
 
-CLIPS
------
 
-OLD: Starting Elasticsearc and Kibana with 8 Gb of RAM
+OLDs
+----
+
+Starting Elasticsearc and Kibana with 8 Gb of RAM
 
 	/PATH-TO/elasticsearch
 	sudo ./bin/elasticsearch -Xmx4g -Xms4g
 
 	/PATH-TO/kibana
 	sudo ./bin/kibana
-
-
-
-**Create an index**
-
-	app/console data:createIndex
-
-**Index data**
-
-	app/console data:process -s 0 -e 100 -f data/datafile.csv
-
-**Delete an index**
-
-	curl -XDELETE "http://elastic:changeme@192.168.56.10:9200/INDEXNAME"
-
-Note: Kibana holds it's own data on indices and index patterns, so you have to delete the index from Kibana also, to see it fully gone.
-
-Note: Kibana refuses to work properly, if date field contain invalid dates(?) such as 2016-012-006
-
-**Extract first 100 lines of file**
-
-	head occurrence.txt -n 100 > occurrence-part.txt
-
-**Extract every 100th line of file, including first row**
-
-	sed -n '1~100p' input.csv > output.csv
-
-**Count number of lines in a file**
-
-	wc -l filename.csv
-
 
