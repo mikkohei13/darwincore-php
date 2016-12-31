@@ -6,6 +6,8 @@ Installation
 
 	composer install --no-dev
 
+(OR php composer.phar  install --no-dev)
+
 
 Setup (UPDATE THIS)
 ------
