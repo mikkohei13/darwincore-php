@@ -9,14 +9,14 @@ Installation
 (OR php composer.phar  install --no-dev)
 
 
-Setup (UPDATE THIS)
+Setup
 ------
 
+- Set elasticsearch server name to ../darwincore-php.php (see example file darwincore-php-EXAMPLE.php)
 - Place datafiles to /data
 - Select which fields to index on settings.php
-- (set index name on process.php and createindex.php)
-	$params['index'] = 'gbif5';
-	$indexParams['index']  = 'gbif5';
+- Set index name to the variable $settingsIndexName in process.php and createindex.php
+- Set field types to the variable $typeMapping in process.php
 
 Commands
 --------
@@ -61,20 +61,34 @@ Todo - checks
 - Date formats
 
 '''TODO'''
-- BUGFIX: throws an error, if trying to process exactly 100.00 lines
+- BUGFIX: throws an error, if number of lines to process is divisible by 10.000
 - PHP library with composer?
 - Set index name in one place or in command
 - set which fields are analyzed in one place?
 - Document code
 - Summary of GBIF data quality
 - index into Amazon service
+- Easier setup?
+
+- Doesn't index if eof before first(?) bulk size limit
+- Dataset name (from where?)
+- species name can be in species or scientificName field; combine into one field without author
+- Misses some rows? Chek with Tiira's first 10k lines, or is this about Kibana's time limit?
+- Code cleanup
+
+- Index name as an argument / setting (both commands)
+- Define analysis and mapping in settings file instead of createIndex
+
+- Remove fields that are only analyzed (issue)
+- Handle missing coordinates
+- Speed up conversion scripts
 
 
 Note
 ----
 - Expects that 
-	- First row of datafile contains Darwin Core terms
-	- id or gbifID is an unique identifier for each row
+	- First row of datafile contains column names
+	- gbifid is an unique identifier for each row
 
 - If datatypes don't match, bulk indexing can fail. (E.g. indexing string into long fails.)
 - If dates are in incorrect format (with/without time), bulk inserting can fail or be extremely slow
@@ -114,25 +128,10 @@ Example indexing
 	- 10.4 MB of Lucene memory
 	- 1,8 GB of disk space
 
-TODO
-----
-- Doesn't index if eof before first(?) bulk size limit
-- Dataset name (from where?)
-- species name can be in species or scientificName field; combine into one field without author
-- Misses some rows? Chek with Tiira's first 10k lines, or is this about Kibana's time limit?
-- Code cleanup
-
-- Index name as an argument / setting (both commands)
-- Define analysis and mapping in settings file instead of createIndex
-
-- Remove fields that are only analyzed (issue)
-- Handle missing coordinates
-- Speed up conversion scripts
 
 
-
-OLDs
-----
+Old notes
+---------
 
 Starting Elasticsearc and Kibana with 8 Gb of RAM
 
